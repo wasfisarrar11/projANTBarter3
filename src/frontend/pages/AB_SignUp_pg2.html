@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="AB_signup.css" />
+    <link href="<https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200&display=swap>"
+    rel="stylesheet"/>
+    <script src="AB_signup_pg2.js"></script>
+  </head>
+  <body>
+    <main id="main-holder">
+      <h1>
+        <title>Sign Up</title>
+      </h1>
+      <form name="user_sign_up" action="/SignUp" method="post">
+        <img src="AB_business_logo.jpg" width="400" alt="Businesss Logo" class="center"/>
+        <h2>Sign Up</h2>
+        <div>
+          <h4><label for="FirstName">First Name</label></h4>
+          <input required minlength="2" type="text" class="input" name="FirstName" id="FirstName" placeholder="" /><br />
+          <span class="error-icon hidden -ml-6 text-red-700">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </span>
+          <span class="success-icon hidden -ml-6 text-green-700">
+            <i class="fa-solid fa-circle-check"></i>
+          </span>
+        </div>
+  
+        <div>
+          <h4><label for="LastName">Last Name</label></h4>
+          <input required minlength="2" type="text" class="input" name="LastName" id="LastName" /><br />
+          <span class="error-icon hidden -ml-6 text-red-700">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </span>
+          <span class="success-icon hidden -ml-6 text-green-700">
+            <i class="fa-solid fa-circle-check"></i>
+          </span>
+        </div>
+  
+        <div>
+          <h4><label for="email">Email</label></h4>
+          <input required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="Email" class="input" name="email" id="email" />
+          <span class="error-icon hidden -ml-6 text-red-700">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </span>
+          <span class="success-icon hidden -ml-6 text-green-700">
+            <i class="fa-solid fa-circle-check"></i>
+          </span>
+        </div>
+  
+        <div>
+          <h4><label for="Birthday">Birthday</label></h4>
+          <input type="text" class="input" name="bday" id="Birthday" required placeholder="MM/DD/YYYY" 
+          pattern="(0[1-9]|1[012])[- /.](0[1-9]|1[0-9]|2[0-9]|3[01])[- /.](19|20)\d\d" />
+          <span class="error-icon hidden -ml-6 text-red-700">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </span>
+          <span class="success-icon hidden -ml-6 text-green-700">
+            <i class="fa-solid fa-circle-check"></i>
+          </span>
+        </div>
+  
+        <div>
+          <h4><label for="Password">Password</label></h4>
+          <input required minlength="12" type="Password" class="input" name="Password" id="Password" 
+          data-validation="match-password" />
+          <span class="error-icon hidden -ml-6 text-red-700">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </span>
+          <span class="success-icon hidden -ml-6 text-green-700">
+            <i class="fa-solid fa-circle-check"></i>
+          </span>
+        </div>
+  
+        <div>
+          <h4><label for="confirmPassword">Confirm Password</label></h4>
+          <input required type="Password" class="input" name="confirmPassword" id="confirmPassword" 
+          data-validation="confirm-password" />
+          <span class="confirm-password-error opacity-0 pointer-events-none -ml-6 text-red-700 mt-2 hidden" id="confirm-password-error" data-validation="confirm-password">
+            Passwords do not match!
+          </span>
+          <span class="confirm-password-success opacity-0 pointer-events-none -ml-6 text-green-700 mt-2 hidden" id="confirm-password-success">
+            Passwords are matching
+          </span>
+        </div>
+  
+        <div>
+          <h4><label for="PhoneNumber">Phone Number</label></h4>
+          <input type="text" class="input" name="PhoneNumber" id="PhoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+          required placeholder="000-000-0000" />
+          <span class="error-icon hidden -ml-6 text-red-700">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </span>
+          <span class="success-icon hidden -ml-6 text-green-700">
+            <i class="fa-solid fa-circle-check"></i>
+          </span>
+        </div>     
+  
+        <input type="submit" class="input submit-btn" id="submitBtn" name="submit" />
+  
+        <div id="popup" style="display: none">
+          <div id="data">
+            <span class="error-icon hidden -ml-6 text-red-700">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </span>
+          <span class="success-icon hidden -ml-6 text-green-700">
+            <i class="fa-solid fa-circle-check"></i>
+          </span><br />
+            <p id="popupText"></p>
+          </div>
+      </div>
+      <footer>
+        <p>© 2024 AntBarter | Designed with ❤️</p>
+      </footer>
+      </form>
+  </body>
+</html>

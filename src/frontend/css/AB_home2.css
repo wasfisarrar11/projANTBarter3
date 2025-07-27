@@ -1,0 +1,462 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f1f1;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    max-width: 1920px;
+    margin: auto;
+}
+
+/* Header Styling */
+header {
+    background-color: #8c1a1a;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0);
+}
+
+header h1 {
+    color: #fbebe9;
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+nav div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+nav a, button {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #fbebe9;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: #a72e2e;
+}
+
+button {
+    border: 1px solid #fbebe9;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 5px 3px; /* Increase the padding to make the button larger */
+}
+
+input[type="submit"] {
+    width: auto;
+    cursor: pointer;
+    background-color: #8c1a1a;
+    color: #fbebe9;
+    border: none;
+    padding: 5px 3px; /* Increase the padding to make the button larger */
+    border-radius: 1px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #a72e2e;
+}
+
+/* Logo Section */
+.logo {
+    width: 400px; /* Adjust this value to change the width of the logo */
+    height: auto; /* This will keep the aspect ratio of the logo */
+}
+
+.logo {
+    width: 30%; /* The logo will take up 50% of its container's width */
+    height: auto;
+}
+  
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 0px 0;
+    background: linear-gradient(rgba(140, 26, 26, 0.7), rgba(140, 26, 26, 0.7)), url('hero-bg.jpg') center/cover no-repeat;
+    color: #fbebe9;
+}
+
+/* Content Page Styling */
+.content-page {
+    display: none;
+    padding: 40px 20px;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+  
+
+.content-page.active {
+    display: block;
+}
+
+/* Mobile-first responsiveness */
+@media screen and (min-width: 768px) {
+    nav div {
+        justify-content: space-between;
+        max-width: 1920px;
+        margin: 0 auto;
+    }
+
+    .hero {
+        padding: 100px 0;
+    }
+}
+
+/* Footer Styling */
+footer {
+    background-color: #8c1a1a;
+    padding: 20px 0;
+    text-align: center;
+    color: #fbebe9;
+}
+
+label, input, textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+input[type="submit"] {
+    width: auto;
+    cursor: pointer;
+    background-color: #8c1a1a;
+    color: #fbebe9;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    margin: 20px 0;
+}
+
+input[type="submit"]:hover {
+    background-color: #a72e2e;
+}
+
+#userLoggedIn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+#userLoggedIn i {
+    color: white;
+    font-size: 30px;
+}
+
+#userLoggedIn p {
+    margin: 0;
+    color: #fbebe9;
+}
+
+textarea {
+    width: 100%; /* Adjust this value to change the width */
+    height: 150px; /* Adjust this value to change the height */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: vertical; /* Allows the user to resize the textarea vertically */
+}
+
+/* Find Barter Posting Styling */
+.search-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+  }
+  
+  input {
+    font-size: 1rem;
+  }
+  
+  .user-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: .25rem;
+    margin-top: 1rem;
+  }
+  
+  .card {
+    border: 1px solid black;
+    background-color: white;
+    padding: .5rem;
+  }
+  
+  .card > .header {
+    margin-bottom: .25rem;
+  }
+  
+  .card > .body {
+    font-size: .8rem;
+    color: #777;
+  }
+  
+  .hide {
+    display: none;
+  }
+
+  #description {
+    max-width: 1200px;
+    margin: 0;
+    height: 250px;
+  }
+
+  .start-barter-btn-default {
+    background-color: #8c1a1a; /* Add some background color to the button */
+    color: #f1f1f1; /* Add some text color to the button */
+    padding: 5px 10px; /* Add some padding to the button for better looks and clickability */
+    border: none; /* Remove the standard border of the button */
+    cursor: pointer; /* Add some nice hover and click effect */
+    transition: background-color 0.3s ease; /* Add some transition effect for better UX */
+  }
+  
+  .start-barter-btn-default:hover {
+    background-color: #a72e2e; /* Add some hover effect to the button */
+  }
+
+/* Barter Agreement Styling */
+#barterForm {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #f4f4f4;
+    border-radius: 5px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+
+  .radio-option input[type="radio"] {
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+
+  .radio-option label {
+    font-weight: bold;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  /* Button styling */
+  button[type="button"]#savePdfButton {
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #a72e2e;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="button"]#savePdfButton:hover {
+    background-color: #000;
+}
+
+/* Handle profile page */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+header {
+  background-color: #000;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+h1 {
+  margin: 0;
+  font-size: 24px;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 10px;
+  font-size: 18px;
+}
+.profile {
+  background-color: #fff;
+  width: 80%;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.profile h2 {
+  margin-top: 0;
+  font-size: 28px;
+  color: #000;
+}
+.profile p {
+  margin: 10px 0;
+  color: #666;
+}
+.profile p strong {
+  color: #333;
+}
+.profile .edit-profile {
+  text-align: right;
+}
+.profile .edit-profile a {
+  color: #a72e2e;
+  text-decoration: none;
+}
+
+/* Handle messages page */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-top: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  resize: none;
+}
+
+input[type="file"] {
+  margin-top: 5px;
+}
+
+input[type="submit"] {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #8c1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Hover styling for submit button */
+input[type="submit"]:hover {
+  background-color: #000000; /* Black color on hover */
+}
+
+.message-box {
+  height: 100px;
+}
+
+.message-list {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.sender-message {
+  background-color: #f9f9f9;
+  border: 1px solid #10c400;
+  margin-left: 50px; /* Indent sender's message */
+}
+
+.receiver-message {
+  background-color: #f2f2f2; /* Grey background color for receiver's messages */
+  border: 1px solid #0d60dd;
+  margin-right: 50px; /* Indent receiver's message */
+}
+
+.message-content {
+  margin-top: 5px;
+}
+
+h2 {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Adjustments for View Messages Button */
+#view-messages-wrapper {
+  text-align: center; /* Center the button */
+  margin-top: 20px; /* Add some space between the button and the message list */
+}
+
+#view-messages-btn {
+  padding: 10px 20px; /* Add some padding for better clickability */
+  background-color: #8c1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Hover styling for View All Messages button */
+#view-messages-btn:hover {
+  background-color: #000000; /* Darker background color on hover */
+}
+
+
+.show-all-messages {
+  display: block; /* Ensure the button is visible */
+}

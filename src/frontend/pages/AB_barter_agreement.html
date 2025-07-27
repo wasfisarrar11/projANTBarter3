@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Barter Agreement</title>
+    <link rel="stylesheet" href="AB_home2.css" />
+    <!-- JS Code for Home_UI2 -->
+    <script defer src="AB_home_ui2.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="AB_barter_agreement.css" />
+
+    <!-- Import jspdf library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+
+    <!-- Import html2pdf library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+    <!-- JS Code for Barter Agreement -->
+    <script type="text/javascript" src="AB_barter_agreement.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>AntBarter</h1>
+      <nav>
+        <div>
+          <a href="AB_home.html">Home</a>
+          <a href="AB_about.html">About</a>
+          <a href="AB_how-it-works.html">How It Works</a>
+          <a href="AB_contact.html">Contact</a>
+          <a href="AB_create_bp.html">Create Posting</a>
+          <a href="AB_find_bp.html">Find Posting</a>
+        </div>
+        <div id="userLoggedIn" style="display: flex">
+          <a href="AB_profile.html">
+            <i class="fas fa-user"></i>
+          </a>
+          <p id="userName">First Last</p>
+          <a href="AB_messages.html">
+            <i class="fas fa-envelope"></i>
+          </a>
+          <p>Messages</p>
+        </div>
+        <button id="sign-out">Sign Out</button>
+      </nav>
+    </header>
+
+    <h2>Barter Agreement</h2>
+    <form id="barterForm">
+      <div class="radio-option">
+        <label for="barterType">Barter Type:</label><br />
+        <input
+          type="radio"
+          id="oneTime"
+          name="barterType"
+          value="oneTime"
+          onchange="toggleFields()"
+        />
+        <label for="oneTime">One-Time Transaction</label><br />
+        <input
+          type="radio"
+          id="ongoing"
+          name="barterType"
+          value="ongoing"
+          onchange="toggleFields()"
+        />
+        <label for="ongoing">Ongoing Arrangement</label><br />
+      </div>
+
+      <div class="form-group">
+        <label for="partyA">Party A:</label>
+        <input
+          required
+          type="text"
+          id="partyA"
+          name="partyA"
+          placeholder="Enter Party A's Name"
+        />
+      </div>
+
+      <div class="form-group one-time">
+        <label for="partyA_offer_oneTime">Party A's Offering (One-Time):</label>
+        <textarea
+          id="partyA_offer_oneTime"
+          name="partyA_offer_oneTime"
+          placeholder="Goods Ex: Othman is offering 5 chickens worth $50."
+        ></textarea>
+      </div>
+
+      <div class="form-group ongoing">
+        <label for="partyA_offer_ongoing">Party A's Offering (Ongoing):</label>
+        <textarea
+          id="partyA_offer_ongoing"
+          name="partyA_offer_ongoing"
+          placeholder="Services Ex: Othman agrees to provide landscaping services to Party B's property every two weeks in exchange for Party B providing fresh produce from his garden during the harvest season."
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="partyB">Party B:</label>
+        <input
+          required
+          type="text"
+          id="partyB"
+          name="partyB"
+          placeholder="Enter Party B's Name"
+        />
+      </div>
+
+      <div class="form-group one-time" style="display: none">
+        <label for="partyB_offer_oneTime">Party B's Offering (One-Time):</label>
+        <textarea
+          required
+          id="partyB_offer_oneTime"
+          name="partyB_offer_oneTime"
+          placeholder="Goods Ex: Wasfi is interested in trading 1 goat with a value of $50."
+        ></textarea>
+      </div>
+
+      <div class="form-group ongoing" style="display: none">
+        <label for="partyB_offer_ongoing">Party B's Offering (Ongoing):</label>
+        <textarea
+          required
+          id="partyB_offer_ongoing"
+          name="partyB_offer_ongoing"
+          placeholder="Services Ex: Wasfi wants landscaping services every two weeks in exchange for Party A providing fresh produce from his garden during the harvest season."
+        ></textarea>
+      </div>
+
+      <label for="startDate">Start Date:</label>
+      <input required type="date" id="startDate" name="startDate" /><br />
+
+      <label for="endDate">End Date:</label>
+      <input required type="date" id="endDate" name="endDate" required /><br />
+
+      <label for="additionalTerms">Additional Terms:</label>
+      <textarea
+        required
+        id="additionalTerms"
+        name="additionalTerms"
+        placeholder="I. The parties agree that any dispute arising from this agreement shall be resolved through negotiation.
+
+II. Party A agrees to deliver the chickens to Party B's residence within 3 business days of the agreement date.
+  
+III. Party B agrees to provide one goat in exchange for the chickens, with delivery to take place after receiving.
+  
+IV. In case of any changes or issues occurring during the barter transaction, the parties agree to notify each other quickly.
+  
+V. This agreement will apply to the parties, as well as each of their respective successors and assigns."
+      ></textarea
+      ><br />
+
+      <div class="form-group">
+        <button
+          type="button"
+          id="savePdfButton"
+          onclick="handleSavePdfButtonClick()"
+        >
+          Save PDF
+        </button>
+      </div>
+      <div id="error-message" style="color: red"></div>
+    </form>
+    <!-- JS script to handle Barter Type, recording barter agreement form data and additional terms-->
+    <script>
+      function toggleFields() {
+        const oneTimeSelected = document.getElementById("oneTime").checked;
+
+        const oneTimeFields = document.querySelectorAll(".one-time");
+        const ongoingFields = document.querySelectorAll(".ongoing");
+
+        const partyBOfferOneTime = document.getElementById(
+          "partyB_offer_oneTime"
+        );
+        const partyBOfferOngoing = document.getElementById(
+          "partyB_offer_ongoing"
+        );
+
+        if (oneTimeSelected) {
+          // Show one-time transaction fields and hide ongoing fields
+          oneTimeFields.forEach((field) => (field.style.display = "block"));
+          ongoingFields.forEach((field) => (field.style.display = "none"));
+
+          // Hide Party B fields for ongoing arrangement
+          partyBOfferOngoing.style.display = "none";
+          partyBOfferOngoing.required = false;
+
+          // Show Party B fields for one-time transaction
+          partyBOfferOneTime.style.display = "block";
+          partyBOfferOneTime.required = true;
+        } else {
+          // Show ongoing fields and hide one-time transaction fields
+          oneTimeFields.forEach((field) => (field.style.display = "none"));
+          ongoingFields.forEach((field) => (field.style.display = "block"));
+
+          // Hide Party B fields for one-time transaction
+          partyBOfferOneTime.style.display = "none";
+          partyBOfferOneTime.required = false;
+
+          // Show Party B fields for ongoing arrangement
+          partyBOfferOngoing.style.display = "block";
+          partyBOfferOngoing.required = true;
+        }
+      }
+
+      function logFormData() {
+        const formData = {
+          partyA: document.getElementById("partyA").value,
+          partyA_offer_oneTime: document.getElementById("partyA_offer_oneTime")
+            .value,
+          partyA_offer_ongoing: document.getElementById("partyA_offer_ongoing")
+            .value,
+          partyB: document.getElementById("partyB").value,
+          partyB_offer_oneTime: document.getElementById("partyB_offer_oneTime")
+            .value,
+          partyB_offer_ongoing: document.getElementById("partyB_offer_ongoing")
+            .value,
+          startDate: document.getElementById("startDate").value,
+          endDate: document.getElementById("endDate").value,
+          additionalTerms: document.getElementById("additionalTerms").value,
+        };
+        console.log(formData);
+      }
+
+      function updateAdditionalTerms() {
+        const oneTimeTerms = `
+      – On a Specific Date. The Offerings shall be exchanged and delivered by each party on or before [DATE].
+  `;
+        const ongoingTerms = `
+      – For an Ongoing Arrangement. The Offerings shall be exchanged for an ongoing arrangement until terminated by either of the Parties. If any of the Parties shall terminate this Agreement, any outstanding Offerings shall remain owed. Termination of this Agreement must be done in writing and to the mailing address mentioned in Section I.
+  `;
+
+        const additionalTermsTextarea =
+          document.getElementById("additionalTerms");
+        const barterType = document.querySelector(
+          'input[name="barterType"]:checked'
+        ).value;
+
+        if (barterType === "oneTime") {
+          additionalTermsTextarea.placeholder = oneTimeTerms;
+        } else if (barterType === "ongoing") {
+          additionalTermsTextarea.placeholder = ongoingTerms;
+        }
+      }
+
+      document
+        .getElementById("additionalTerms")
+        .addEventListener("input", function () {
+          if (this.placeholder) {
+            this.placeholder = "";
+          }
+        });
+
+      // Sets a default barter type and adjusts the visibility of form fields based on this selection when the webpage finishes loading
+      window.onload = function () {
+        // Select a default barter type (e.g., one-time)
+        document.getElementById("oneTime").checked = true;
+
+        // Call the toggleFields function to show/hide the appropriate fields
+        toggleFields();
+      };
+
+      // When the selected barter type changes, the toggleFields function will be called
+      document
+        .getElementById("oneTime")
+        .addEventListener("change", toggleFields);
+      document
+        .getElementById("ongoing")
+        .addEventListener("change", toggleFields);
+
+      // When the form is submitted, the default form submission behavior is prevented
+      // and the validateAndSavePdf function is called
+      document
+        .getElementById("barterForm")
+        .addEventListener("submit", function (event) {
+          // Prevent the form from submitting normally
+          event.preventDefault();
+
+          validateAndSavePdf();
+        });
+    </script>
+  </body>
+</html>

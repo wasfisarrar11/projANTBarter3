@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AntBarter</title>
+    <link rel="stylesheet" href="AB_home.css" />
+    <script defer src="AB_home_ui.js"></script>
+  </head>
+
+  <body>
+    <header>
+      <h1>AntBarter</h1>
+      <nav>
+        <div>
+          <a href="javascript:void(0);" data-target="home">Home</a>
+          <a href="javascript:void(0);" data-target="about">About</a>
+          <a href="javascript:void(0);" data-target="how-it-works"
+            >How It Works</a
+          >
+          <a href="javascript:void(0);" data-target="contact">Contact</a>
+        </div>
+        <div>
+          <button id="signIn">Sign In</button>
+          <button id="signUp">Sign Up</button>
+        </div>
+      </nav>
+    </header>
+
+    <div class="hero">
+      <img src="AB_business_logo.jpg" alt="Logo" class="logo" />
+    </div>
+
+    <!-- Home Page Content -->
+    <div class="content-page active" id="home">
+      <p>
+        <strong>
+          Your go-to platform for bartering and professional networking.</strong
+        >
+      </p>
+
+      <p>
+        <strong>
+          We're thrilled to introduce a revolutionary platform designed for
+          professionals eager to securely exchange goods and services.</strong
+        >
+      </p>
+      <p>
+        <strong>
+          No longer limited by monetary constraints, access great opportunities
+          with our community.
+        </strong>
+      </p>
+    </div>
+
+    <!-- About Page Content -->
+    <div class="content-page" id="about">
+      <h2>About Us</h2>
+      <p>
+        <strong>
+          One of the key missions of AntBarter is to create an online community
+          of experts to establish certainty and a strong reputation in the
+          Internet marketplace.
+        </strong>
+      </p>
+      <p>
+        <strong>
+          We provide a professional networking platform where one user can
+          connect with another relevant user based on their credibility, work
+          experience, skills, necessities, and common interests.
+        </strong>
+      </p>
+      <p>
+        <strong>
+          Every exchange has the potential to lead to long-term collaborations
+          and partnerships.
+        </strong>
+      </p>
+    </div>
+
+    <!-- How It Works Page Content -->
+    <div class="content-page" id="how-it-works">
+      <h2>How AntBarter Works</h2>
+      <ol>
+        <li>
+          <strong>Sign Up:</strong> Sign Up and complete your profile creation.
+        </li>
+        <li>
+          <strong>Create a Barter Posting:</strong> Showcase your goods and
+          services for other professionals near you to discover.
+        </li>
+        <li>
+          <strong>Find a Barter Posting:</strong> Found a good or service that
+          you are looking for? Connect with the professional.
+        </li>
+        <li>
+          <strong>Barter Agreement & Exchange:</strong> Complete a secure barter
+          agreement and carry out the exchange.
+        </li>
+        <li>
+          <strong>Proivde Feedback:</strong> Leave a review to share your
+          experience.
+        </li>
+      </ol>
+    </div>
+
+    <!-- Contact Page Content -->
+    <div class="content-page" id="contact">
+      <h2>Contact Our Team</h2>
+      <p>We're always here to assist! Meet our core team members:</p>
+      <ul>
+        <li><strong>Wasfi Sarrar</strong></li>
+        <li><strong>Othman Lateef</strong></li>
+      </ul>
+      <p><strong>Phone:</strong> (123) 456-7890</p>
+      <p><strong>Address:</strong> 1234 AntBarter Lane, Phoenix, Arizona</p>
+      <p>
+        For inquiries, suggestions, or feedback, don't hesitate to drop us a
+        message below!
+      </p>
+      <form action="/submit" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
+
+        <input type="submit" value="Send" />
+      </form>
+    </div>
+
+    <footer>
+      <p>&copy; 2024 AntBarter | Designed with ❤️</p>
+    </footer>
+  </body>
+</html>

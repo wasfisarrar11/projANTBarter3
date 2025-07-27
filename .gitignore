@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# AWS & Environment
+.env
+.env.local
+.env.production
+aws-config-secret.js
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log

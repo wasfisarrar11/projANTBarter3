@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="AB_signup.css" />
+    <link
+      href="<https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200&display=swap>"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <form onsubmit="validate(event)" action="AB_SignUp_pg2.html">
+        <h1>
+          <img
+            src="AB_business_logo.jpg"
+            width="400"
+            alt="Businesss Logo"
+            class="center"
+          />
+        </h1>
+        <h2>Sign Up</h2>
+        <div>
+          <h4><label for="terms">Terms and Conditions</label><br /></h4>
+          <textarea id="terms" readonly style="width: 100%; height: 400px">
+Welcome to AntBarter, a digital platform designed to connect professionals for the purpose of bartering services. 
+
+By using our web application, you agree to these Terms and Conditions.   
+
+1) "User" refers to anyone who is registered on AntBarter.
+
+2) "Service" refers to the AntBarter platform.
+  
+3) "Barter" refers to the exchange of goods or services between two users.
+            
+4) User Obligations:
+Users are responsible for the accuracy of the information they provide on the AntBarter platform. This means that users agree to use the platform in a lawful manner.
+            
+5) Bartering:
+AntBarter is a platform that facilitates bartering between users. We are not directly involved in the transactions and cannot guarantee the quality, safety, or legality of what is offered.
+            
+6) Ratings and Reviews:
+Users may rate and review each other. Users must provide honest ratings and reviews based on their experiences.
+           
+7) Expert Validations:
+AntBarter may use expert validations to verify a user's goods, services, and skills along with their qualifications. However, these validations should not be solely relied upon, and users should they exercise their own judgement.
+            
+8) Limitation of Liability:
+AntBarter is not liable for any damages or losses related to your use of the services. We don’t become involved in disputes between users, or between users and any third party relating to the use of the services.
+            
+9) Changes to the Terms:
+We may update these Terms from time to time. If we believe that the changes are material, we’ll let you know by doing one (or more) of the following: (i) posting the changes on the Site, (ii) sending you an email or message about the changes.
+            
+10) Contact:
+For any questions about these Terms, please refer to the Contact page where you can send us a message.            
+</textarea
+          >
+          <input
+            type="checkbox"
+            id="agree"
+            name="agree"
+            value="agree"
+            required
+          />
+          <label for="agree"> I agree to the Terms and Conditions</label><br />
+          <span id="termsErr"></span>
+        </div>
+
+        <input type="submit" class="input submit-btn" id="submitBtn" />
+
+        <div id="popup" style="display: none">
+          <div id="data">
+            <span class="close">×</span><br />
+            <p id="popupText"></p>
+          </div>
+        </div>
+        <footer>
+          <p>© 2024 AntBarter | Designed with ❤️</p>
+        </footer>
+        <script src="AB_signup_pg1.js"></script>
+      </form>
+    </header>
+  </body>
+</html>

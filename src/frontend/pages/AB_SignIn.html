@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In | AntBarter</title>
+    <link rel="stylesheet" href="AB_signin.css" />
+  </head>
+
+  <body>
+    <main id="main-holder">
+      <img
+        src="AB_business_logo.jpg"
+        width="300"
+        alt="Businesss Logo"
+        class="center"
+      />
+      <h1 id="signIn-header">Sign In</h1>
+
+      <form onsubmit="return signinValid()" id="signIn-form">
+        <input
+          type="text"
+          name="email"
+          id="email-field"
+          class="signIn-form-field"
+          placeholder="Email"
+        />
+        <div id="email_error" class="error-msg">Please enter a valid Email</div>
+
+        <input
+          type="password"
+          name="password"
+          id="password-field"
+          class="signIn-form-field"
+          placeholder="Password"
+        />
+        <div id="password_error" class="error-msg">
+          Please enter a valid Password
+        </div>
+
+        <button type="submit" id="signIn-form-submit" aria-label="Sign In">
+          Sign In
+        </button>
+      </form>
+      <a href="AB_Forgot_Password.html" id="forgot-password">
+        Forgot Password?
+      </a>
+      <a href="AB_SignUp_pg1.html" id="signUp-button">
+        Don't have an account? Sign Up
+      </a>
+      <footer>
+        <p>© 2024 AntBarter | Designed with ❤️</p>
+      </footer>
+    </main>
+    <script src="AB_signin.js"></script>
+  </body>
+</html>

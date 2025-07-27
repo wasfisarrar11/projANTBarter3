@@ -1,0 +1,135 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f1f1;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    max-width: 1920px;
+    margin: auto;
+}
+
+/* Header Styling */
+header {
+    background-color: #8c1a1a;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0);
+}
+
+header h1 {
+    color: #fbebe9;
+    margin: 0;
+}
+
+nav div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+nav a, button {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #fbebe9;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: #a72e2e;
+}
+
+button {
+    border: 1px solid #fbebe9;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #a72e2e;
+}
+
+/* Logo Section */
+.logo {
+    width: 400px; /* Adjust this value to change the width of the logo */
+    height: auto; /* This will keep the aspect ratio of the logo */
+}
+
+.logo {
+    width: 30%; /* The logo will take up 50% of its container's width */
+    height: auto;
+}
+  
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 0px 0;
+    background: linear-gradient(rgba(140, 26, 26, 0.7), rgba(140, 26, 26, 0.7)), url('hero-bg.jpg') center/cover no-repeat;
+    color: #fbebe9;
+}
+
+/* Content Page Styling */
+.content-page {
+    display: none;
+    padding: 40px 20px;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+  
+
+.content-page.active {
+    display: block;
+}
+
+/* Mobile-first responsiveness */
+@media screen and (min-width: 768px) {
+    nav div {
+        justify-content: space-between;
+        max-width: 1920px;
+        margin: 0 auto;
+    }
+
+    .hero {
+        padding: 100px 0;
+    }
+}
+
+/* Footer Styling */
+footer {
+    background-color: #8c1a1a;
+    padding: 20px 0;
+    text-align: center;
+    color: #fbebe9;
+}
+
+label, input, textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+input[type="submit"] {
+    width: auto;
+    cursor: pointer;
+    background-color: #8c1a1a;
+    color: #fbebe9;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #a72e2e;
+}

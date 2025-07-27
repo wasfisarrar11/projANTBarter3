@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AntBarter</title>
+    <link rel="stylesheet" href="AB_home2_update.css" />
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1200.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/amazon-cognito-identity-js/6.3.6/amazon-cognito-identity.min.js"></script>
+    <script src="../config/aws-config.js"></script>
+    <script defer src="AB_home_ui2.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <header>
+      <h1>AntBarter</h1>
+      <!-- We Will Combine the How it Works Desciption into the hompeage
+      and add to it -->
+      <nav>
+        <div class="nav-links">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#contact">Contact</a>
+          <a href="AB_create_bp.html">Create Posting</a>
+          <a href="AB_find_bp.html">Find Posting</a>
+        </div>
+        <div id="userLoggedIn">
+          <a href="AB_profile.html" aria-label="Profile">
+            <i class="fas fa-user"></i>
+          </a>
+          <p id="userName">First Last</p>
+          <a href="AB_messages.html" aria-label="Messages">
+            <i class="fas fa-envelope"></i>
+          </a>
+          <p>Messages</p>
+        </div>
+        <button id="sign-out">Sign Out</button>
+      </nav>
+    </header>
+
+    <div class="hero">
+      <img src="New_Ant.png" alt="Logo" class="logo" />
+      <button class="cta-button">Start Trading Now!</button>
+      <!-- CTA Button -->
+    </div>
+
+    <div class="main-content">
+      <section class="featured-postings">
+        <h2>Recent Postings</h2>
+        <!-- Dynamically load recent postings here -->
+        <div id="recentPostings"></div>
+      </section>
+      <section class="search-bar">
+        <input
+          type="text"
+          placeholder="Search for postings..."
+          aria-label="Search"
+        />
+        <button>Search</button>
+      </section>
+    </div>
+
+    <footer>
+      <p>&copy; 2024 AntBarter | Designed with ❤️ for All of Humanity</p>
+      <div class="footer-links">
+        <a href="#privacy">Privacy Policy</a>
+        <a href="#terms">Terms of Service</a>
+        <a href="#faq">FAQs</a>
+        <a href="#social">Social Media</a>
+      </div>
+    </footer>
+
+    <script>
+      // Load content for each section
+      window.addEventListener("DOMContentLoaded", function () {
+        loadContent("AB_home.html", "home");
+        loadContent("AB_about.html", "about");
+        loadContent("AB_how-it-works.html", "how-it-works");
+        loadContent("AB_contact.html", "contact");
+        loadRecentPostings(); // Load recent postings
+      });
+
+      function loadContent(url, targetId) {
+        // Existing function...
+      }
+
+      function loadRecentPostings() {
+        // Placeholder function to load and display recent postings
+        document.getElementById("recentPostings").innerHTML =
+          "<p>No recent postings available.</p>";
+        // You can replace this with AJAX calls to fetch recent postings
+      }
+    </script>
+  </body>
+</html>

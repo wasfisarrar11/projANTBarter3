@@ -1,0 +1,23 @@
+{
+  "name": "antbarter-web-app",
+  "version": "1.0.0",
+  "description": "Bartering platform for trading goods, services, and digital products",
+  "main": "src/pages/AB_Home_UI2_Update.html",
+  "scripts": {
+    "start": "live-server src/pages/",
+    "deploy": "aws s3 sync src/ s3://antbarter-web-app --delete"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/yourusername/antbarter-web-app.git"
+  },
+  "keywords": ["bartering", "trading", "marketplace", "web-app"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "amazon-cognito-identity-js": "^6.3.6"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
