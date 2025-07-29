@@ -2,13 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Ensures proper mobile display and zooming -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AntBarter</title>
-    <link rel="stylesheet" href="AB_home2_update.css" />
+    <title>AntBarter - Trade Without Money</title>
+
+    <!-- Main styling for the homepage -->
+    <link rel="stylesheet" href="../css/AB_home2_update.css" />
+
+    <!-- AWS SDK for backend services -->
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1200.0.min.js"></script>
+    <!-- Amazon Cognito for user authentication -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/amazon-cognito-identity-js/6.3.6/amazon-cognito-identity.min.js"></script>
+    <!-- Our AWS configuration file -->
     <script src="../config/aws-config.js"></script>
-    <script defer src="AB_home_ui2.js"></script>
+    <!-- Main homepage JavaScript functionality -->
+    <script defer src="../js/AB_home_ui2.js"></script>
+    <!-- Font Awesome icons for better visual appeal -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -16,84 +25,513 @@
   </head>
 
   <body>
+    <!-- Main navigation header -->
     <header>
-      <h1>AntBarter</h1>
-      <!-- We Will Combine the How it Works Desciption into the hompeage
-      and add to it -->
-      <nav>
-        <div class="nav-links">
-          <a href="#home">Home</a>
-          <a href="#about">About</a>
-          <a href="#how-it-works">How It Works</a>
-          <a href="#contact">Contact</a>
-          <a href="AB_create_bp.html">Create Posting</a>
-          <a href="AB_find_bp.html">Find Posting</a>
-        </div>
-        <div id="userLoggedIn">
-          <a href="AB_profile.html" aria-label="Profile">
-            <i class="fas fa-user"></i>
-          </a>
-          <p id="userName">First Last</p>
-          <a href="AB_messages.html" aria-label="Messages">
-            <i class="fas fa-envelope"></i>
-          </a>
-          <p>Messages</p>
-        </div>
-        <button id="sign-out">Sign Out</button>
-      </nav>
+      <div class="header-container">
+        <h1>AntBarter</h1>
+        <p class="tagline">ANT: All National Trading</p>
+
+        <!-- Main navigation menu -->
+        <nav>
+          <div class="nav-links">
+            <a href="#home" class="nav-link active">
+              <i class="fas fa-home"></i> Home
+            </a>
+            <a href="#about" class="nav-link">
+              <i class="fas fa-info-circle"></i> About
+            </a>
+            <a href="#how-it-works" class="nav-link">
+              <i class="fas fa-question-circle"></i> How It Works
+            </a>
+            <a href="#contact" class="nav-link">
+              <i class="fas fa-envelope"></i> Contact
+            </a>
+            <a href="AB_create_bp.html" class="nav-link create-btn">
+              <i class="fas fa-plus-circle"></i> Post Item
+            </a>
+            <a href="AB_find_bp.html" class="nav-link find-btn">
+              <i class="fas fa-search"></i> Browse Items
+            </a>
+          </div>
+
+          <!-- User profile section (shown when logged in) -->
+          <div id="userLoggedIn" class="user-section" style="display: none">
+            <a
+              href="AB_profile.html"
+              class="profile-link"
+              aria-label="My Profile"
+            >
+              <i class="fas fa-user-circle"></i>
+              <span id="userName">Guest User</span>
+            </a>
+            <a
+              href="AB_messages.html"
+              class="messages-link"
+              aria-label="My Messages"
+            >
+              <i class="fas fa-envelope"></i>
+              <span class="message-count" id="messageCount">0</span>
+            </a>
+            <button id="sign-out" class="sign-out-btn">
+              <i class="fas fa-sign-out-alt"></i> Sign Out
+            </button>
+          </div>
+
+          <!-- Sign in/up buttons (shown when not logged in) -->
+          <div id="userNotLoggedIn" class="auth-section">
+            <a href="AB_SignIn.html" class="sign-in-btn">
+              <i class="fas fa-sign-in-alt"></i> Sign In
+            </a>
+            <a href="AB_SignUp_pg1.html" class="sign-up-btn">
+              <i class="fas fa-user-plus"></i> Join Free
+            </a>
+          </div>
+        </nav>
+      </div>
     </header>
 
-    <div class="hero">
-      <img src="New_Ant.png" alt="Logo" class="logo" />
-      <button class="cta-button">Start Trading Now!</button>
-      <!-- CTA Button -->
-    </div>
+    <!-- Hero section with main call-to-action -->
+    <section class="hero">
+      <div class="hero-content">
+        <img src="../images/New_Ant.png" alt="AntBarter Logo" class="logo" />
+        <h2 class="hero-title">
+          Trade Items You Don't Need for Things You Want
+        </h2>
+        <p class="hero-subtitle">
+          Join a unique network of people trading goods, services, skills, and digital
+          products without using money
+        </p>
 
-    <div class="main-content">
+        <!-- Main action buttons -->
+        <div class="cta-buttons">
+          <button
+            class="cta-button primary"
+            onclick="scrollToSection('how-it-works')"
+          >
+            <i class="fas fa-play-circle"></i> See How It Works
+          </button>
+          <button
+            class="cta-button secondary"
+            onclick="window.location.href='AB_create_bp.html'"
+          >
+            <i class="fas fa-plus"></i> Start Trading Now
+          </button>
+        </div>
+
+        <!-- Trust indicators for building confidence -->
+        <div class="trust-indicators">
+          <div class="trust-item">
+            <i class="fas fa-users"></i>
+            <span>A protected community where we never tolerate fraud. Your privacy is protected every step of the way.</span>
+          </div>
+          <div class="trust-item">
+            <i class="fas fa-handshake"></i>
+            <span>Straightforward Trading</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main content area -->
+    <main class="main-content">
+      <!-- Quick search section for easy item discovery -->
+      <section class="search-section">
+        <h2>What Are You Looking For?</h2>
+        <div class="search-container">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search for books, electronics, services..."
+              aria-label="Search for items"
+            />
+            <button onclick="performSearch()" class="search-btn">Search</button>
+          </div>
+
+          <!-- Popular category buttons for quick browsing -->
+          <div class="category-buttons">
+            <button class="category-btn" onclick="searchByCategory('books')">
+              <i class="fas fa-book"></i> Books
+            </button>
+            <button
+              class="category-btn"
+              onclick="searchByCategory('electronics')"
+            >
+              <i class="fas fa-laptop"></i> Electronics
+            </button>
+            <button
+              class="category-btn"
+              onclick="searchByCategory('furniture')"
+            >
+              <i class="fas fa-couch"></i> Furniture
+            </button>
+            <button class="category-btn" onclick="searchByCategory('services')">
+              <i class="fas fa-tools"></i> Services
+            </button>
+            <button class="category-btn" onclick="searchByCategory('digital')">
+              <i class="fas fa-download"></i> Digital Items
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent postings section -->
       <section class="featured-postings">
-        <h2>Recent Postings</h2>
-        <!-- Dynamically load recent postings here -->
-        <div id="recentPostings"></div>
-      </section>
-      <section class="search-bar">
-        <input
-          type="text"
-          placeholder="Search for postings..."
-          aria-label="Search"
-        />
-        <button>Search</button>
-      </section>
-    </div>
+        <h2>
+          <i class="fas fa-fire"></i> Recent Postings
+          <span class="section-subtitle">See what others are trading</span>
+        </h2>
 
+        <!-- Container for dynamically loaded recent posts -->
+        <div id="recentPostings" class="postings-grid">
+          <!-- Sample posting cards will be loaded here -->
+          <div class="loading-message">
+            <i class="fas fa-spinner fa-spin"></i> Loading recent postings...
+          </div>
+        </div>
+
+        <!-- View more button -->
+        <div class="view-more">
+          <a href="AB_find_bp.html" class="view-more-btn">
+            <i class="fas fa-arrow-right"></i> View All Postings
+          </a>
+        </div>
+      </section>
+
+      <!-- How it works section (embedded in homepage) -->
+      <section id="how-it-works" class="how-it-works">
+        <h2>How AntBarter Works</h2>
+        <p class="section-intro">Trading is as easy as 1-2-3!</p>
+
+        <div class="steps-container">
+          <div class="step">
+            <div class="step-icon">
+              <i class="fas fa-camera"></i>
+              <span class="step-number">1</span>
+            </div>
+            <h3>Post Your Item</h3>
+            <p>Take a photo and describe what you want to trade</p>
+          </div>
+
+          <div class="step">
+            <div class="step-icon">
+              <i class="fas fa-search"></i>
+              <span class="step-number">2</span>
+            </div>
+            <h3>Find What You Want</h3>
+            <p>Browse items from people in your area</p>
+          </div>
+
+          <div class="step">
+            <div class="step-icon">
+              <i class="fas fa-handshake"></i>
+              <span class="step-number">3</span>
+            </div>
+            <h3>Make the Trade</h3>
+            <p>Message each other and arrange a safe meetup</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- About section (embedded) -->
+      <section id="about" class="about-section">
+        <div class="about-content">
+          <h2>Why Choose AntBarter?</h2>
+          <div class="benefits-grid">
+            <div class="benefit">
+              <i class="fas fa-dollar-sign"></i>
+              <h3>No Money Required</h3>
+              <p>Trade directly without cash transactions</p>
+            </div>
+            <div class="benefit">
+              <i class="fas fa-recycle"></i>
+              <h3>Help the Environment</h3>
+              <p>Give items a second life instead of throwing them away</p>
+            </div>
+            <div class="benefit">
+              <i class="fas fa-users"></i>
+              <h3>Build Community</h3>
+              <p>Connect with neighbors and make new friends</p>
+            </div>
+            <div class="benefit">
+              <i class="fas fa-globe"></i>
+              <h3>Digital Items Too</h3>
+              <p>Trade ebooks, software, courses, and more</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact section (embedded) -->
+      <section id="contact" class="contact-section">
+        <h2>Need Help?</h2>
+        <div class="contact-options">
+          <div class="contact-method">
+            <i class="fas fa-envelope"></i>
+            <h3>Email Support</h3>
+            <p>support@antbarter.com</p>
+          </div>
+          <div class="contact-method">
+            <i class="fas fa-question-circle"></i>
+            <h3>FAQ</h3>
+            <p>Find answers to common questions</p>
+          </div>
+          <div class="contact-method">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Safety Tips</h3>
+            <p>Learn how to trade safely</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer with important links -->
     <footer>
-      <p>&copy; 2024 AntBarter | Designed with ❤️ for All of Humanity</p>
-      <div class="footer-links">
-        <a href="#privacy">Privacy Policy</a>
-        <a href="#terms">Terms of Service</a>
-        <a href="#faq">FAQs</a>
-        <a href="#social">Social Media</a>
+      <div class="footer-content">
+        <div class="footer-main">
+          <h3>AntBarter</h3>
+          <p>&copy; 2025 AntBarter | Designed with ❤️ for All of Humanity</p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Legal</h4>
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#terms">Terms of Service</a>
+            <a href="#community-guidelines">Community Guidelines</a>
+          </div>
+
+          <div class="footer-column">
+            <h4>Support</h4>
+            <a href="#faq">FAQs</a>
+            <a href="#contact">Contact Us</a>
+            <a href="#safety">Safety Tips</a>
+          </div>
+
+          <div class="footer-column">
+            <h4>Connect</h4>
+            <a href="#social" aria-label="Instagram">
+              <i class="fab fa-instagram"></i> Instagram
+            </a>
+            <a href="#social" aria-label="YouTube"
+              <i class="fab fa-youtube"></i> YouTube
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
 
     <script>
-      // Load content for each section
+      // Initialize the page when DOM is fully loaded
       window.addEventListener("DOMContentLoaded", function () {
-        loadContent("AB_home.html", "home");
-        loadContent("AB_about.html", "about");
-        loadContent("AB_how-it-works.html", "how-it-works");
-        loadContent("AB_contact.html", "contact");
-        loadRecentPostings(); // Load recent postings
+        console.log("AntBarter homepage loaded successfully");
+
+        // Check if user is logged in and update UI accordingly
+        checkUserLoginStatus();
+
+        // Load recent postings from database or API
+        loadRecentPostings();
+
+        // Set up navigation event listeners
+        setupNavigation();
+
+        // Initialize search functionality
+        setupSearch();
       });
 
-      function loadContent(url, targetId) {
-        // Existing function...
+      // Check if user is currently logged in using AWS Cognito
+      function checkUserLoginStatus() {
+        try {
+          // This will be implemented with AWS Cognito
+          const isLoggedIn = false; // Placeholder - will check Cognito session
+
+          if (isLoggedIn) {
+            // Show logged-in user interface
+            document.getElementById("userLoggedIn").style.display = "flex";
+            document.getElementById("userNotLoggedIn").style.display = "none";
+          } else {
+            // Show login/signup buttons
+            document.getElementById("userLoggedIn").style.display = "none";
+            document.getElementById("userNotLoggedIn").style.display = "flex";
+          }
+        } catch (error) {
+          console.error("Error checking login status:", error);
+        }
       }
 
+      // Load and display recent postings from database
       function loadRecentPostings() {
-        // Placeholder function to load and display recent postings
-        document.getElementById("recentPostings").innerHTML =
-          "<p>No recent postings available.</p>";
-        // You can replace this with AJAX calls to fetch recent postings
+        const container = document.getElementById("recentPostings");
+
+        // Show loading state
+        container.innerHTML =
+          '<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> Loading recent postings...</div>';
+
+        // Simulate API call - replace with real data fetching
+        setTimeout(() => {
+          // Sample data - replace with real API call
+          const samplePostings = [
+            {
+              id: 1,
+              title: "iPhone 12 Pro",
+              description: "Excellent condition, looking for MacBook",
+              image: "../images/sample-phone.jpg",
+              user: "Sarah M.",
+              location: "Tempe, AZ",
+            },
+            {
+              id: 2,
+              title: "Lawn Mowing Service",
+              description: "Trade lawn care for computer repair",
+              image: "../images/sample-service.jpg",
+              user: "Mike R.",
+              location: "Milwaukee, WI",
+            },
+            {
+              id: 3,
+              title: "Collection of Books",
+              description: "50+ novels, looking for furniture",
+              image: "../images/sample-books.jpg",
+              user: "Jennifer L.",
+              location: "Dallas, TX",
+            },
+          ];
+
+          // Generate HTML for postings
+          let postingsHTML = "";
+          samplePostings.forEach((posting) => {
+            postingsHTML += `
+              <div class="posting-card" onclick="viewPosting(${posting.id})">
+                <div class="posting-image">
+                  <i class="fas fa-image"></i>
+                </div>
+                <div class="posting-info">
+                  <h3>${posting.title}</h3>
+                  <p class="posting-description">${posting.description}</p>
+                  <div class="posting-meta">
+                    <span class="user"><i class="fas fa-user"></i> ${posting.user}</span>
+                    <span class="location"><i class="fas fa-map-marker-alt"></i> ${posting.location}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+
+          container.innerHTML =
+            postingsHTML ||
+            '<p class="no-postings">No recent postings available. <a href="AB_create_bp.html">Be the first to post!</a></p>';
+        }, 1000);
+      }
+
+      // Set up navigation menu functionality
+      function setupNavigation() {
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            // Handle internal navigation (sections with #)
+            if (this.getAttribute("href").startsWith("#")) {
+              e.preventDefault();
+              const targetSection = this.getAttribute("href").substring(1);
+              scrollToSection(targetSection);
+
+              // Update active nav link
+              navLinks.forEach((nl) => nl.classList.remove("active"));
+              this.classList.add("active");
+            }
+            // External links (other HTML pages) will work normally
+          });
+        });
+
+        // Handle sign out button
+        const signOutBtn = document.getElementById("sign-out");
+        if (signOutBtn) {
+          signOutBtn.addEventListener("click", handleSignOut);
+        }
+      }
+
+      // Smooth scroll to a specific section
+      function scrollToSection(sectionId) {
+        const targetElement = document.getElementById(sectionId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }
+
+      // Set up search functionality
+      function setupSearch() {
+        const searchInput = document.getElementById("searchInput");
+
+        // Allow search on Enter key press
+        searchInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            performSearch();
+          }
+        });
+      }
+
+      // Perform search and redirect to find page with search term
+      function performSearch() {
+        const searchTerm = document.getElementById("searchInput").value.trim();
+
+        if (searchTerm) {
+          // Redirect to find page with search parameter
+          window.location.href = `AB_find_bp.html?search=${encodeURIComponent(
+            searchTerm
+          )}`;
+        } else {
+          // If no search term, just go to browse page
+          window.location.href = "AB_find_bp.html";
+        }
+      }
+
+      // Search by specific category
+      function searchByCategory(category) {
+        window.location.href = `AB_find_bp.html?category=${encodeURIComponent(
+          category
+        )}`;
+      }
+
+      // View a specific posting (redirect to detailed view)
+      function viewPosting(postingId) {
+        window.location.href = `AB_posting_detail.html?id=${postingId}`;
+      }
+
+      // Handle user sign out
+      function handleSignOut() {
+        try {
+          // Clear AWS Cognito session (to be implemented)
+          console.log("Signing out user...");
+
+          // Clear local storage
+          localStorage.clear();
+
+          // Redirect to sign in page
+          window.location.href = "AB_SignIn.html";
+        } catch (error) {
+          console.error("Error signing out:", error);
+        }
+      }
+
+      // Show or hide loading states for better user experience
+      function showLoading(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.innerHTML =
+            '<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+        }
+      }
+
+      // Display error messages in a user-friendly way
+      function showError(message, elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-triangle"></i> ${message}</div>`;
+        }
       }
     </script>
   </body>
