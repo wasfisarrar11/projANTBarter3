@@ -1,15 +1,40 @@
-# ProjANT2
+# ProjANT2 - AntBarter AI
 
-## 🚀 Project Overview
+## Project Direction
 
-**ProjANT2** is a safety-focused aviation upgrade initiative aimed at optimizing system reliability and connectivity through structured engineering workflows. Built locally and managed via GitLab CI/CD, this repository anchors future development with scalable design and continuous integration.
+This project is now structured to move from a static/manual barter website into an AI-powered negotiation platform that can:
+- automatically negotiate trade terms through chat,
+- generate a binding barter agreement draft,
+- persist sessions and agreements in Azure SQL.
 
-## 📁 Getting Started
+## Tech Stack
 
-To set up your local environment:
+- Frontend: HTML/CSS/JavaScript (existing pages retained)
+- Backend: Python (FastAPI; Flask is an alternative in the same ecosystem)
+- Database: Azure SQL Server
+- AI: Claude API (Anthropic)
 
-```bash
-git clone https://gitlab.com/wasfisarrar2000/projant2.git
-cd projant2
-npm install
-```
+## Backend Setup (FastAPI)
+
+1. Go to backend folder:
+   - `cd src/backend/python`
+2. Create and activate venv:
+   - `python -m venv .venv`
+   - Windows PowerShell: `.venv\Scripts\Activate.ps1`
+3. Install dependencies:
+   - `pip install -r requirements.txt`
+4. Configure env:
+   - copy `.env.example` to `.env`
+   - set `ANTHROPIC_API_KEY` and `DATABASE_URL` (Azure SQL)
+5. Run API:
+   - `uvicorn app.main:app --reload --port 8000`
+
+## Frontend Integration
+
+- Updated page: `src/frontend/pages/AB_Home_UI2_Update.html`
+- New AI script: `src/frontend/js/AB_ai_chatbot.js`
+- New AI UI styles: `src/frontend/css/AB_home2_update.css`
+
+The frontend calls:
+- `POST /api/ai/negotiate`
+- `POST /api/agreements/generate`

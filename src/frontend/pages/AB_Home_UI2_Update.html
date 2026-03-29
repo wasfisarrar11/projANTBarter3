@@ -9,14 +9,8 @@
     <!-- Main styling for the homepage -->
     <link rel="stylesheet" href="../css/AB_home2_update.css" />
 
-    <!-- AWS SDK for backend services -->
-    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1200.0.min.js"></script>
-    <!-- Amazon Cognito for user authentication -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/amazon-cognito-identity-js/6.3.6/amazon-cognito-identity.min.js"></script>
-    <!-- Our AWS configuration file -->
-    <script src="../config/aws-config.js"></script>
-    <!-- Main homepage JavaScript functionality -->
-    <script defer src="../js/AB_home_ui2.js"></script>
+    <!-- AI chatbot integration -->
+    <script defer src="../js/AB_ai_chatbot.js"></script>
     <!-- Font Awesome icons for better visual appeal -->
     <link
       rel="stylesheet"
@@ -176,6 +170,46 @@
         </div>
       </section>
 
+      <section class="ai-negotiator-section" id="ai-negotiator">
+        <h2><i class="fas fa-robot"></i> AI Trade Negotiator</h2>
+        <p class="section-intro">
+          Automatically negotiate fair trade terms and generate a binding agreement draft.
+        </p>
+        <div class="ai-grid">
+          <div class="ai-chat-card">
+            <div id="aiChatLog" class="ai-chat-log">
+              <div class="ai-message system">
+                Describe your item and what you want in return to start negotiating.
+              </div>
+            </div>
+            <div class="ai-chat-input-row">
+              <input
+                id="aiChatInput"
+                type="text"
+                placeholder="Example: I can trade my iPhone 12 for a MacBook Air..."
+                aria-label="AI trade negotiator message"
+              />
+              <button id="aiSendBtn" class="search-btn">Send</button>
+            </div>
+            <div class="agreement-actions">
+              <button id="generateAgreementBtn" class="category-btn">
+                Generate Binding Agreement Draft
+              </button>
+            </div>
+          </div>
+
+          <aside class="ai-side-card">
+            <h3>Tech Stack</h3>
+            <ul>
+              <li>Frontend: HTML/CSS/JavaScript</li>
+              <li>Backend: Python (FastAPI)</li>
+              <li>Database: Azure SQL Server</li>
+              <li>AI: Claude API (Anthropic)</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
       <!-- Recent postings section -->
       <section class="featured-postings">
         <h2>
@@ -326,39 +360,10 @@
       // Initialize the page when DOM is fully loaded
       window.addEventListener("DOMContentLoaded", function () {
         console.log("AntBarter homepage loaded successfully");
-
-        // Check if user is logged in and update UI accordingly
-        checkUserLoginStatus();
-
-        // Load recent postings from database or API
-        loadRecentPostings();
-
-        // Set up navigation event listeners
         setupNavigation();
-
-        // Initialize search functionality
         setupSearch();
+        loadRecentPostings();
       });
-
-      // Check if user is currently logged in using AWS Cognito
-      function checkUserLoginStatus() {
-        try {
-          // This will be implemented with AWS Cognito
-          const isLoggedIn = false; // Placeholder - will check Cognito session
-
-          if (isLoggedIn) {
-            // Show logged-in user interface
-            document.getElementById("userLoggedIn").style.display = "flex";
-            document.getElementById("userNotLoggedIn").style.display = "none";
-          } else {
-            // Show login/signup buttons
-            document.getElementById("userLoggedIn").style.display = "none";
-            document.getElementById("userNotLoggedIn").style.display = "flex";
-          }
-        } catch (error) {
-          console.error("Error checking login status:", error);
-        }
-      }
 
       // Load and display recent postings from database
       function loadRecentPostings() {
