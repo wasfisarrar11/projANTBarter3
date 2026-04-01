@@ -262,6 +262,84 @@ input[type="text"]:focus {
 }
 
 /* ========================================
+   AI NEGOTIATOR SECTION
+======================================== */
+
+.ai-negotiator-section {
+    background-color: white;
+    border-radius: 12px;
+    padding: 2em;
+    margin-bottom: 3em;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.ai-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5em;
+}
+
+.ai-chat-card,
+.ai-side-card {
+    border: 1px solid #e1e5e9;
+    border-radius: 12px;
+    padding: 1em;
+    background-color: #fff;
+}
+
+.ai-chat-log {
+    height: 320px;
+    overflow-y: auto;
+    border: 1px solid #e1e5e9;
+    border-radius: 10px;
+    padding: 12px;
+    background-color: #fafafa;
+    margin-bottom: 12px;
+}
+
+.ai-message {
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    max-width: 85%;
+    word-break: break-word;
+}
+
+.ai-message.user {
+    margin-left: auto;
+    background-color: #e94e77;
+    color: white;
+}
+
+.ai-message.assistant {
+    background-color: #f0f2f4;
+    color: #333;
+}
+
+.ai-message.system {
+    background-color: #eef7ff;
+    color: #274060;
+}
+
+.ai-chat-input-row {
+    display: flex;
+    gap: 10px;
+}
+
+.ai-chat-input-row input {
+    flex: 1;
+}
+
+.agreement-actions {
+    margin-top: 10px;
+}
+
+.ai-side-card ul {
+    margin: 0 0 1em 1em;
+    padding: 0;
+}
+
+/* ========================================
    RECENT POSTINGS SECTION
 ======================================== */
 
@@ -619,6 +697,10 @@ footer {
     }
     
     .help-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-grid {
         grid-template-columns: 1fr;
     }
 }
