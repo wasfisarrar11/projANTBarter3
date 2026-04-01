@@ -1,4 +1,6 @@
-# ProjANT2 - AntBarter AI
+# projANTBarter3 — AntBarter AI
+
+AB Web Application Project.
 
 ## Project Direction
 
