@@ -1,0 +1,28 @@
+{
+  "backup_branch": "cleanup/backup-2026-03-31",
+  "unused_code_candidates": [
+    {
+      "path": "src/backend/python/app/guardrails.py",
+      "type": "class",
+      "confidence": 95,
+      "reason": "GuardrailResult dataclass was defined but never imported or referenced; removed."
+    }
+  ],
+  "unused_dependencies": [],
+  "tests_run": {
+    "total": 5,
+    "passed": null,
+    "failed": null,
+    "coverage_percent": null,
+    "note": "Five backend tests were added. Run locally: cd src/backend/python && pip install -r requirements-dev.txt && python -m pytest -q --tb=short && coverage run -m pytest && coverage report"
+  },
+  "changes_branch": "cleanup/remove-guardrail-dead-class",
+  "PR_description": "## Cleanup: remove unused GuardrailResult + add backend tests\n\n### Summary\n- **Removed:** `GuardrailResult` dataclass in `guardrails.py` (dead code; no references in repo).\n- **Added:** Minimal pytest suite (`tests/`), `pytest.ini`, `requirements-dev.txt` so removals are guarded by automated checks.\n\n### File-by-file rationale\n| File | Change |\n|------|--------|\n| `app/guardrails.py` | Drop unused `GuardrailResult` and unused `dataclass` / `__future__` imports tied only to that type. |\n| `pytest.ini` | Set `pythonpath` and `testpaths` for `app` package imports. |\n| `requirements-dev.txt` | Pins dev deps: pytest, httpx (TestClient), coverage; includes `-r requirements.txt`. |\n| `tests/conftest.py` | In-memory SQLite + `get_db` override for isolated API tests. |\n| `tests/test_health.py` | Smoke: `GET /health`. |\n| `tests/test_guardrails.py` | Unit: `estimate_tokens_from_text`, `check_limits_or_raise` on empty usage. |\n| `tests/test_ai_negotiate.py` | Integration: `POST /api/ai/negotiate` without `ANTHROPIC_API_KEY` returns placeholder (no external API). |\n\n### Dependencies\nAll packages in `requirements.txt` are used: FastAPI/uvicorn stack, Anthropic client, SQLAlchemy, pyodbc (Azure SQL), Pydantic, gunicorn (Docker CMD). No removals.\n\n### Safety\n- **Secrets:** No private keys or live API keys in repo. `.env.example` uses placeholders only — **rotate** any credentials if they were ever committed elsewhere.\n- **Migrations:** None in this repo; app uses `Base.metadata.create_all` at startup — nothing deleted.\n- **Infra:** Dockerfile / `.gitlab-ci.yml` unchanged in this MR.\n\n### Test & coverage\nRun from repo root:\n```bash\ncd src/backend/python\npip install -r requirements-dev.txt\npython -m pytest -q --tb=short\ncoverage run -m pytest && coverage report\n```\n\n### Manual smoke (optional)\n```bash\ncd src/backend/python\nuvicorn app.main:app --host 127.0.0.1 --port 8000\n# curl http://127.0.0.1:8000/health\n```\n\n### Rollback\n```bash\ngit fetch origin\ngit checkout cleanup/backup-2026-03-31\ngit push origin cleanup/backup-2026-03-31   # already exists; use to restore a branch from backup SHA\ngit checkout main\ngit reset --hard cleanup/backup-2026-03-31   # destructive: only if you must restore main to backup\n```\nPrefer restoring via MR revert or cherry-pick rather than hard reset on shared `main`.\n\n### Static analysis (run locally)\nFrom `src/backend/python`:\n```bash\npip install vulture ruff pylint autoflake isort black pipdeptree\npython -m vulture app --min-confidence 60\npython -m ruff check app --select F401,F841\npython -m pylint app\npython -m autoflake --recursive --remove-all-unused-imports --check app\n```\n\n### Blockers / manual review\n- Full-repo **vulture/ruff/pylint** output was not captured in this environment; re-run commands above before merge.\n- **Unreferenced asset scan** (bash loop over `basename` / `rg`) not run on Windows here — run in Git Bash or WSL if desired.\n- **Docker smoke** (`docker build` / `docker run`) skipped — Dockerfile still uses `python:3.11-slim`; align to `python:3.12.3-slim` on Azure Ubuntu separately if required.\n",
+  "manual_review_items": [
+    "Re-run vulture, ruff (F401/F841), pylint, and autoflake --check under src/backend/python and attach output to the MR.",
+    "Run pip freeze / pipdeptree on the Azure VM Python 3.12.3 venv and confirm parity with requirements.txt for production.",
+    "Optional: add a GitLab CI job to run pytest+coverage on merge requests (pyodbc may require apt build deps in the job image).",
+    "If production DATABASE_URL or ANTHROPIC_API_KEY were ever exposed, rotate them; .env.example placeholders are not secrets.",
+    "Consider upgrading Dockerfile base from python:3.11-slim to python:3.12.3-slim for parity with Ubuntu 24.04 + Python 3.12.3; requires docker build smoke test per your checklist."
+  ]
+}

@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
 from fastapi import HTTPException
@@ -9,12 +6,6 @@ from sqlalchemy.orm import Session
 
 from .config import settings
 from .models import ApiUsage
-
-
-@dataclass(frozen=True)
-class GuardrailResult:
-    allowed: bool
-    reason: str | None = None
 
 
 def _utc_now() -> datetime:
