@@ -16,27 +16,7 @@ This project is now structured to move from a static/manual barter website into 
 - Database: Azure SQL Server
 - AI: Claude API (Anthropic)
 
-## Backend Setup (FastAPI)
-
-1. Go to backend folder:
-   - `cd src/backend/python`
-2. Create and activate venv:
-   - `python -m venv .venv`
-   - Windows PowerShell: `.venv\Scripts\Activate.ps1`
-3. Install dependencies:
-   - `pip install -r requirements.txt`
-4. Configure env:
-   - copy `.env.example` to `.env`
-   - set `ANTHROPIC_API_KEY` and `DATABASE_URL` (Azure SQL)
-5. Run API:
-   - `uvicorn app.main:app --reload --port 8000`
-
-## Frontend Integration
-
-- Updated page: `src/frontend/pages/AB_Home_UI2_Update.html`
-- New AI script: `src/frontend/js/AB_ai_chatbot.js`
-- New AI UI styles: `src/frontend/css/AB_home2_update.css`
-
-The frontend calls:
-- `POST /api/ai/negotiate`
-- `POST /api/agreements/generate`
+## The AntBarter AI Backend 
+- Checks if the service is running, helps two users negotiate a trade using AI, and can generate a written agreement for their deal
+- The negotiation endpoint takes the conversation history and the latest user message, then returns an AI‑generated response
+- The agreement endpoint produces a finalized agreement text based on the listings and user IDs involved
