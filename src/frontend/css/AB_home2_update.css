@@ -334,6 +334,43 @@ input[type="text"]:focus {
     margin-top: 10px;
 }
 
+.ai-chat-options {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e1e5e9;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+.ai-option-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.ai-option-row input {
+    margin-top: 3px;
+}
+
+.ai-option-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #333;
+}
+
+.ai-option-input {
+    width: 100%;
+    max-width: 280px;
+    padding: 8px 10px;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
 .ai-side-card ul {
     margin: 0 0 1em 1em;
     padding: 0;

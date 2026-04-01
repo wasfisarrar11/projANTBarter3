@@ -1,10 +1,49 @@
-const AI_API_BASE_URL =
-  window.AI_API_BASE_URL || "http://localhost:8000";
+/**
+ * API base URL: set window.__APP_CONFIG__.apiBaseUrl in a prior script (build/deploy step).
+ * Same-origin: leave unset to call /api/... on the current host (reverse-proxy the API).
+ * Never embed secrets or environment-specific credentials in this file.
+ */
+function getApiBaseUrl() {
+  if (typeof window.__APP_CONFIG__ === "object" && window.__APP_CONFIG__.apiBaseUrl) {
+    return String(window.__APP_CONFIG__.apiBaseUrl).replace(/\/$/, "");
+  }
+  return "";
+}
+
+function apiUrl(path) {
+  const base = getApiBaseUrl();
+  const p = path.startsWith("/") ? path : `/${path}`;
+  if (!base) {
+    return p;
+  }
+  return `${base}${p}`;
+}
+
+function getSessionNegotiationIds() {
+  if (typeof sessionStorage === "undefined") {
+    return {
+      userId: "anon",
+      listingId: "pending",
+      counterpartyListingId: "pending",
+    };
+  }
+  let sid = sessionStorage.getItem("antbarter_session_id");
+  if (!sid) {
+    sid =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : String(Date.now());
+    sessionStorage.setItem("antbarter_session_id", sid);
+  }
+  return {
+    userId: sessionStorage.getItem("antbarter_user_id") || `anon-${sid.slice(0, 12)}`,
+    listingId: sessionStorage.getItem("antbarter_listing_id") || "pending",
+    counterpartyListingId:
+      sessionStorage.getItem("antbarter_counterparty_listing_id") || "pending",
+  };
+}
 
 const negotiationState = {
-  userId: "demo-user",
-  listingId: "demo-listing",
-  counterpartyListingId: "demo-counterparty",
   messages: [],
 };
 
@@ -28,20 +67,39 @@ async function sendNegotiationMessage() {
   input.value = "";
 
   appendChatMessage("user", message);
+
+  const priorMessages = negotiationState.messages.filter((m) => m.role !== "system");
   negotiationState.messages.push({ role: "user", content: message });
 
+  const ids = getSessionNegotiationIds();
+  const includeMp = document.getElementById("includeMarketplaceContext")?.checked;
+  const countryRaw = document.getElementById("marketplaceCountry")?.value?.trim().toUpperCase() || "";
+  const country = countryRaw.length === 2 ? countryRaw : undefined;
+
+  const body = {
+    user_id: ids.userId,
+    listing_id: ids.listingId,
+    counterparty_listing_id: ids.counterpartyListingId,
+    latest_user_message: message,
+    messages: priorMessages,
+  };
+
+  if (includeMp) {
+    body.marketplace_search_query = message.slice(0, 200);
+    if (country) {
+      body.marketplace_listing_country_iso2 = country;
+    }
+  }
+
   try {
-    const res = await fetch(`${AI_API_BASE_URL}/api/ai/negotiate`, {
+    const res = await fetch(apiUrl("/api/ai/negotiate"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...negotiationState,
-        latest_user_message: message,
-      }),
+      body: JSON.stringify(body),
     });
 
     if (!res.ok) {
-      throw new Error(`Negotiation request failed: ${res.status}`);
+      throw new Error(`Request failed: ${res.status}`);
     }
 
     const data = await res.json();
@@ -53,24 +111,48 @@ async function sendNegotiationMessage() {
     console.error(error);
     appendChatMessage(
       "system",
-      "AI service is unavailable. Please verify backend/API deployment."
+      "The assistant is temporarily unavailable. Please try again later."
     );
   }
 }
 
 async function generateAgreement() {
+  const ids = getSessionNegotiationIds();
+  const jurisdiction =
+    document.getElementById("jurisdictionInput")?.value?.trim() || "";
+  const includeMp = document.getElementById("includeMarketplaceContext")?.checked;
+  const countryRaw = document.getElementById("marketplaceCountry")?.value?.trim().toUpperCase() || "";
+  const country = countryRaw.length === 2 ? countryRaw : undefined;
+  const lastUser = negotiationState.messages
+    .filter((m) => m.role === "user")
+    .pop();
+  const mpQuery = includeMp && lastUser ? String(lastUser.content).slice(0, 200) : undefined;
+
+  const body = {
+    user_id: ids.userId,
+    listing_id: ids.listingId,
+    counterparty_listing_id: ids.counterpartyListingId,
+    messages: negotiationState.messages.filter((m) => m.role !== "system"),
+  };
+  if (jurisdiction) {
+    body.jurisdiction = jurisdiction;
+  }
+  if (mpQuery) {
+    body.marketplace_search_query = mpQuery;
+    if (country) {
+      body.marketplace_listing_country_iso2 = country;
+    }
+  }
+
   try {
-    const res = await fetch(`${AI_API_BASE_URL}/api/agreements/generate`, {
+    const res = await fetch(apiUrl("/api/agreements/generate"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...negotiationState,
-        jurisdiction: "Arizona, USA",
-      }),
+      body: JSON.stringify(body),
     });
 
     if (!res.ok) {
-      throw new Error(`Agreement request failed: ${res.status}`);
+      throw new Error(`Request failed: ${res.status}`);
     }
 
     const data = await res.json();
@@ -79,7 +161,7 @@ async function generateAgreement() {
     console.error(error);
     appendChatMessage(
       "system",
-      "Agreement generation failed. Try again after backend setup."
+      "Agreement generation is temporarily unavailable. Please try again later."
     );
   }
 }

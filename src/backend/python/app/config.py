@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 
 class Settings:
@@ -24,6 +25,35 @@ class Settings:
 
     # If set (>0), deny requests once monthly estimated tokens exceed this cap.
     AI_MONTHLY_TOKEN_BUDGET = int(os.getenv("AI_MONTHLY_TOKEN_BUDGET", "60000"))
+
+    # --- CORS (avoid credentials + wildcard together; see main.py) ---
+    # Comma-separated origins, e.g. https://app.example.com,https://www.example.com
+    # Empty string = allow any origin for development only (not recommended for production).
+    CORS_ALLOW_ORIGINS = os.getenv("CORS_ALLOW_ORIGINS", "")
+    CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", "false").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+
+    # --- Meta Content Library: Facebook Marketplace preview (research / approved access only) ---
+    # See: https://developers.facebook.com/docs/content-library-and-api/content-library-api/guides/fb-marketplace/
+    META_CONTENT_LIBRARY_ENABLED = os.getenv(
+        "META_CONTENT_LIBRARY_ENABLED", "false"
+    ).lower() in ("1", "true", "yes")
+    META_MARKETPLACE_MAX_QUERY_LEN = int(os.getenv("META_MARKETPLACE_MAX_QUERY_LEN", "200"))
+    # Optional HTTP fallback when the official Python client is not installed (set by your Meta-approved environment).
+    META_CONTENT_LIBRARY_HTTP_BASE_URL = os.getenv("META_CONTENT_LIBRARY_HTTP_BASE_URL", "")
+    META_CONTENT_LIBRARY_ACCESS_TOKEN = os.getenv("META_CONTENT_LIBRARY_ACCESS_TOKEN", "")
+
+    # Agreement drafts when the client omits jurisdiction
+    DEFAULT_AGREEMENT_JURISDICTION = os.getenv("DEFAULT_AGREEMENT_JURISDICTION", "")
+
+    def cors_origins_list(self) -> List[str]:
+        raw = (self.CORS_ALLOW_ORIGINS or "").strip()
+        if not raw:
+            return ["*"]
+        return [o.strip() for o in raw.split(",") if o.strip()]
 
 
 settings = Settings()

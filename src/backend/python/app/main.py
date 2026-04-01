@@ -9,14 +9,20 @@ from .config import settings
 from .database import Base, engine, get_db
 from .models import AgreementDraft, NegotiationSession
 from .guardrails import check_limits_or_raise, estimate_tokens_from_text, record_usage
+from .marketplace_library import fetch_marketplace_preview_context
 from .schemas import AgreementRequest, AgreementResponse, NegotiateRequest, NegotiateResponse
 
 app = FastAPI(title=settings.APP_NAME, version=settings.APP_VERSION)
 
+_cors_origins = settings.cors_origins_list()
+_cors_credentials = settings.CORS_ALLOW_CREDENTIALS
+if "*" in _cors_origins:
+    _cors_credentials = False
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_cors_origins,
+    allow_credentials=_cors_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -48,7 +54,18 @@ def ai_negotiate(payload: NegotiateRequest, db: Session = Depends(get_db)):
         estimated_tokens_for_request=estimated_tokens,
     )
 
-    ai_response = negotiate(payload.messages, payload.latest_user_message)
+    mp_ctx = None
+    if payload.marketplace_search_query:
+        mp_ctx = fetch_marketplace_preview_context(
+            q=payload.marketplace_search_query,
+            listing_country_iso2=payload.marketplace_listing_country_iso2,
+        )
+
+    ai_response = negotiate(
+        payload.messages,
+        payload.latest_user_message,
+        marketplace_context=mp_ctx,
+    )
 
     session = NegotiationSession(
         user_id=payload.user_id,
@@ -86,13 +103,30 @@ def create_agreement(payload: AgreementRequest, db: Session = Depends(get_db)):
         estimated_tokens_for_request=estimated_tokens,
     )
 
-    agreement_text = generate_agreement(payload.messages, payload.jurisdiction)
+    jurisdiction = (
+        (payload.jurisdiction or "").strip()
+        or (settings.DEFAULT_AGREEMENT_JURISDICTION or "").strip()
+        or "Not specified"
+    )
+
+    mp_ctx = None
+    if payload.marketplace_search_query:
+        mp_ctx = fetch_marketplace_preview_context(
+            q=payload.marketplace_search_query,
+            listing_country_iso2=payload.marketplace_listing_country_iso2,
+        )
+
+    agreement_text = generate_agreement(
+        payload.messages,
+        jurisdiction,
+        marketplace_context=mp_ctx,
+    )
 
     draft = AgreementDraft(
         user_id=payload.user_id,
         listing_id=payload.listing_id,
         counterparty_listing_id=payload.counterparty_listing_id,
-        jurisdiction=payload.jurisdiction,
+        jurisdiction=jurisdiction,
         agreement_text=agreement_text,
     )
     db.add(draft)

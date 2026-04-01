@@ -11,8 +11,20 @@ SYSTEM_PROMPT = (
     "You are AntBarter AI, an automated trade negotiator. "
     "Negotiate fair item-for-item trades, identify mismatched value and propose balancing terms, "
     "and keep responses concise and professional. "
-    "Do not fabricate legal guarantees. Flag safety and verification steps."
+    "Do not fabricate legal guarantees. Flag safety and verification steps. "
+    "If optional public marketplace listing samples are provided, use them only as rough "
+    "category/title context — they are not verified and are not from AntBarter listings."
 )
+
+
+def _system_with_marketplace(marketplace_context: str | None) -> str:
+    if not marketplace_context:
+        return SYSTEM_PROMPT
+    return (
+        SYSTEM_PROMPT
+        + "\n\nOptional public marketplace context (aggregated; not verified): "
+        + marketplace_context[:2000]
+    )
 
 
 def _client():
@@ -32,7 +44,12 @@ def _anthropic_messages(messages: List[ChatMessage], latest_user_message: str, m
     return out
 
 
-def negotiate(messages: List[ChatMessage], latest_user_message: str) -> str:
+def negotiate(
+    messages: List[ChatMessage],
+    latest_user_message: str,
+    *,
+    marketplace_context: str | None = None,
+) -> str:
     client = _client()
     if client is None:
         return (
@@ -46,7 +63,7 @@ def negotiate(messages: List[ChatMessage], latest_user_message: str) -> str:
 
     msg = client.messages.create(
         model=settings.CLAUDE_MODEL,
-        system=SYSTEM_PROMPT,
+        system=_system_with_marketplace(marketplace_context),
         messages=_anthropic_messages(messages, latest_user_message, max_history=12),
         temperature=0.4,
         max_tokens=settings.AI_MAX_OUTPUT_TOKENS,
@@ -57,7 +74,12 @@ def negotiate(messages: List[ChatMessage], latest_user_message: str) -> str:
     return "".join([b.text for b in text_blocks]).strip() or "No response generated."
 
 
-def generate_agreement(messages: List[ChatMessage], jurisdiction: str) -> str:
+def generate_agreement(
+    messages: List[ChatMessage],
+    jurisdiction: str,
+    *,
+    marketplace_context: str | None = None,
+) -> str:
     client = _client()
     if client is None:
         return (
@@ -75,7 +97,7 @@ def generate_agreement(messages: List[ChatMessage], jurisdiction: str) -> str:
 
     msg = client.messages.create(
         model=settings.CLAUDE_MODEL,
-        system=SYSTEM_PROMPT,
+        system=_system_with_marketplace(marketplace_context),
         messages=_anthropic_messages(messages, prompt, max_history=20),
         temperature=0.2,
         max_tokens=settings.AI_MAX_OUTPUT_TOKENS,

@@ -9,6 +9,10 @@
     <!-- Main styling for the homepage -->
     <link rel="stylesheet" href="../css/AB_home2_update.css" />
 
+    <!-- Deployment may set window.__APP_CONFIG__ = { apiBaseUrl: "https://api.example.com" } before this script -->
+    <script>
+      window.__APP_CONFIG__ = window.__APP_CONFIG__ || {};
+    </script>
     <!-- AI chatbot integration -->
     <script defer src="../js/AB_ai_chatbot.js"></script>
     <!-- Font Awesome icons for better visual appeal -->
@@ -191,6 +195,36 @@
               />
               <button id="aiSendBtn" class="search-btn">Send</button>
             </div>
+            <div class="ai-chat-options" role="group" aria-label="Assistant options">
+              <label class="ai-option-row">
+                <input type="checkbox" id="includeMarketplaceContext" />
+                <span
+                  >Optional: include public marketplace listing context (keywords from your message; processed on
+                  the server only)</span
+                >
+              </label>
+              <label class="ai-option-label" for="marketplaceCountry">Marketplace country (ISO 3166-1 alpha-2, optional)</label>
+              <input
+                id="marketplaceCountry"
+                class="ai-option-input"
+                type="text"
+                maxlength="2"
+                inputmode="text"
+                autocomplete="off"
+                placeholder="e.g. US"
+                aria-label="Two-letter country code for optional marketplace context"
+              />
+              <label class="ai-option-label" for="jurisdictionInput">Jurisdiction for agreement draft (optional)</label>
+              <input
+                id="jurisdictionInput"
+                class="ai-option-input"
+                type="text"
+                maxlength="200"
+                autocomplete="address-level1"
+                placeholder="Your state, region, or country"
+                aria-label="Legal jurisdiction for generated draft"
+              />
+            </div>
             <div class="agreement-actions">
               <button id="generateAgreementBtn" class="category-btn">
                 Generate Binding Agreement Draft
@@ -199,12 +233,11 @@
           </div>
 
           <aside class="ai-side-card">
-            <h3>Tech Stack</h3>
+            <h3>Privacy &amp; security</h3>
             <ul>
-              <li>Frontend: HTML/CSS/JavaScript</li>
-              <li>Backend: Python (FastAPI)</li>
-              <li>Database: Azure SQL Server</li>
-              <li>AI: Claude API (Anthropic)</li>
+              <li>We do not publish API keys or internal infrastructure details on public pages.</li>
+              <li>Configure the assistant only through your deployment environment — never in page source.</li>
+              <li>Optional public listing context uses approved data access on the server, not in the browser.</li>
             </ul>
           </aside>
         </div>
