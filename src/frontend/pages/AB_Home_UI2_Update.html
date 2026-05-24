@@ -12,6 +12,9 @@
     <!-- Deployment may set window.__APP_CONFIG__ = { apiBaseUrl: "https://api.example.com" } before this script -->
     <script>
       window.__APP_CONFIG__ = window.__APP_CONFIG__ || {};
+      if (window.location.hostname === 'localhost') {
+        window.__APP_CONFIG__.apiBaseUrl = 'http://localhost:8000';
+      }
     </script>
     <!-- AI chatbot integration -->
     <script defer src="../js/AB_ai_chatbot.js"></script>
@@ -381,7 +384,7 @@
             <a href="#social" aria-label="Instagram">
               <i class="fab fa-instagram"></i> Instagram
             </a>
-            <a href="#social" aria-label="YouTube"
+            <a href="#social" aria-label="YouTube">
               <i class="fab fa-youtube"></i> YouTube
             </a>
           </div>

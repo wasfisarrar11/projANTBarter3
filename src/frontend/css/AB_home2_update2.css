@@ -1,0 +1,119 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+}
+
+header {
+    background-color: #333; /* Updated to a consistent color */
+    color: white;
+    padding: 1em 0;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2em; /* Overall font size for the header */
+    margin: 0; /* Remove default margin */
+}
+
+.large-letter {
+    font-size: 1.5em; /* Larger font size for the first letters */
+    font-weight: bold; /* Make them bold for emphasis */
+    color: #e94e77; /* Consistent color for visual appeal (adjust as needed) */
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2em;
+}
+
+nav div {
+    display: flex;
+    align-items: center;
+}
+
+nav a {
+    margin: 0 15px; /* Adjusted margin for even spacing */
+    color: white; 
+    text-decoration: none; 
+    transition: color 0.3s; /* Smooth transition effect */
+}
+
+nav a:hover {
+    color: #e94e77; /* Change color on hover */
+}
+
+nav button {
+    background-color: #e94e77; /* Consistent button color */
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    border-radius: 5px; /* Rounded button corners for consistency */
+    transition: background-color 0.3s; /* Smooth transition effect */
+}
+
+nav button:hover {
+    background-color: #d83b66; /* Darker shade on hover */
+}
+
+.hero {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.logo-container {
+    display: flex; /* Use flexbox to align images side by side */
+    justify-content: center; /* Center the images */
+    align-items: center; /* Align items vertically */
+}
+
+.example-image {
+    max-width: 100px; /* Set the max width of the new image */
+    margin-right: 10px; /* Space between the two images */
+}
+
+.logo {
+    max-width: 200px; /* Ensure the logo maintains its size */
+}
+
+main {
+    padding: 2em;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-wrapper {
+    margin-bottom: 1.5em;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 1em 0;
+    padding: 1em;
+    background-color: #f9f9f9;
+}
+
+.start-barter-btn-default {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+footer {
+    text-align: center;
+    padding: 1em 0;
+    background-color: #333; /* Consistent footer color */
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}

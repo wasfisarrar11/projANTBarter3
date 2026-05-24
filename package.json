@@ -2,20 +2,33 @@
   "name": "antbarter-web-app",
   "version": "1.0.0",
   "description": "Bartering platform for trading goods, services, and digital products",
-  "main": "src/pages/AB_Home_UI2_Update.html",
+  "main": "src/frontend/pages/AB_Home_UI2_Update.html",
   "scripts": {
-    "start": "live-server src/pages/",
-    "deploy": "aws s3 sync src/ s3://antbarter-web-app --delete"
+    "start": "live-server src/frontend/ --open=pages/AB_Home_UI2_Update.html",
+    "backend:db": "node src/backend/server/AB_db_server.js",
+    "backend:signin": "node src/backend/server/AB_signin_server.js",
+    "backend:auth": "node src/backend/server/AB_user_auth_server.js",
+    "test:ai": "cd src/backend/python && .venv/Scripts/python.exe -m pytest"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://gitlab.com/yourusername/antbarter-web-app.git"
+  "engines": {
+    "node": ">=18.18.0",
+    "npm": ">=9.0.0"
   },
-  "keywords": ["bartering", "trading", "marketplace", "web-app"],
-  "author": "Your Name",
+  "author": "Wasfi Ibn Waleed",
   "license": "MIT",
   "dependencies": {
-    "amazon-cognito-identity-js": "^6.3.6"
+    "amazon-cognito-identity-js": "^6.3.6",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.1.0",
+    "method-override": "^3.0.0",
+    "mysql2": "^3.11.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "live-server": "^1.2.2"

@@ -1,0 +1,4 @@
+{
+  "tests/test_auth.py::test_negotiate_endpoint_requires_auth_when_enabled": true,
+  "tests/test_auth.py": true
+}

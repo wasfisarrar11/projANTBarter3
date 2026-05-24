@@ -47,7 +47,7 @@ signInForm.addEventListener("submit", (e) => {
     if (!signinValid()) {
         return;
     }
-    window.location.href = "AB_Home_UI2.html";
+    window.location.href = "AB_Home_UI2_Update.html";
 })
 
 const forgotPasswordForm = document.getElementById("forgot-password-form");

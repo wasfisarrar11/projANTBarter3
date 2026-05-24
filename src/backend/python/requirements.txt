@@ -6,3 +6,4 @@ pyodbc
 pydantic
 gunicorn
 httpx
+python-dotenv

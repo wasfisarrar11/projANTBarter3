@@ -21,6 +21,14 @@ class NegotiateRequest(BaseModel):
 
 class NegotiateResponse(BaseModel):
     ai_response: str
+    # status="ok" for a normal AI response, "refused" when the request was
+    # blocked by the safety layer (input classifier or output tripwire). The
+    # frontend should render refusals with a distinct, non-conversational
+    # treatment and surface the report/flag affordance.
+    status: Literal["ok", "refused"] = "ok"
+    refusal_reason: Optional[str] = None
+    refusal_category: Optional[str] = None
+    flagged_for_review: bool = False
 
 
 class AgreementRequest(BaseModel):
@@ -35,3 +43,7 @@ class AgreementRequest(BaseModel):
 
 class AgreementResponse(BaseModel):
     agreement_text: str
+    status: Literal["ok", "refused"] = "ok"
+    refusal_reason: Optional[str] = None
+    refusal_category: Optional[str] = None
+    flagged_for_review: bool = False
