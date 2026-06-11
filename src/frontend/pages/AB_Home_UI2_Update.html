@@ -9,13 +9,27 @@
     <!-- Main styling for the homepage -->
     <link rel="stylesheet" href="../css/AB_home2_update.css" />
 
-    <!-- Deployment may set window.__APP_CONFIG__ = { apiBaseUrl: "https://api.example.com" } before this script -->
+    <!--
+      API base URL resolution:
+      - Production / VM (any non-localhost host): leave apiBaseUrl unset so
+        AB_ai_chatbot.js uses RELATIVE paths like "/api/ai/negotiate".
+        Nginx on the VM reverse-proxies /api/ to the FastAPI backend on
+        127.0.0.1:8000. This avoids CORS, avoids exposing port 8000 publicly,
+        and works automatically over HTTP today and HTTPS once SSL is on.
+      - Local dev only: if the page is opened on http://localhost or
+        http://127.0.0.1, point at the locally-running uvicorn on :8000.
+      Never hard-code the public IP / domain here; never embed API keys.
+    -->
     <script>
       window.__APP_CONFIG__ = window.__APP_CONFIG__ || {};
-      if (window.location.hostname === 'localhost') {
+      var __hn = window.location.hostname;
+      if (__hn === 'localhost' || __hn === '127.0.0.1') {
         window.__APP_CONFIG__.apiBaseUrl = 'http://localhost:8000';
       }
+      // else: leave apiBaseUrl unset — same-origin relative requests.
     </script>
+    <!-- Shared blue-collar trade category map (mirrors backend) -->
+    <script defer src="../js/AB_trade_categories.js"></script>
     <!-- AI chatbot integration -->
     <script defer src="../js/AB_ai_chatbot.js"></script>
     <!-- Font Awesome icons for better visual appeal -->
@@ -96,11 +110,10 @@
       <div class="hero-content">
         <img src="../images/New_Ant.png" alt="AntBarter Logo" class="logo" />
         <h2 class="hero-title">
-          Trade Items You Don't Need for Things You Want
+          Trade Your Skills for What You Need &mdash; No Money Required
         </h2>
         <p class="hero-subtitle">
-          Join a unique network of people trading goods, services, skills, and digital
-          products without using money
+          Plumbers, electricians, carpenters, and contractors: swap your services, tools, and time with people in your area
         </p>
 
         <!-- Main action buttons -->
@@ -144,34 +157,31 @@
             <input
               type="text"
               id="searchInput"
-              placeholder="Search for books, electronics, services..."
+              placeholder="Search for plumbing, electrical, roofing, lawn care..."
               aria-label="Search for items"
             />
             <button onclick="performSearch()" class="search-btn">Search</button>
           </div>
 
-          <!-- Popular category buttons for quick browsing -->
+          <!-- Popular category buttons — blue-collar trades -->
           <div class="category-buttons">
-            <button class="category-btn" onclick="searchByCategory('books')">
-              <i class="fas fa-book"></i> Books
+            <button class="category-btn" onclick="searchByCategory('plumbing')">
+              <i class="fas fa-faucet"></i> Plumbing
             </button>
-            <button
-              class="category-btn"
-              onclick="searchByCategory('electronics')"
-            >
-              <i class="fas fa-laptop"></i> Electronics
+            <button class="category-btn" onclick="searchByCategory('electrical')">
+              <i class="fas fa-bolt"></i> Electrical
             </button>
-            <button
-              class="category-btn"
-              onclick="searchByCategory('furniture')"
-            >
-              <i class="fas fa-couch"></i> Furniture
+            <button class="category-btn" onclick="searchByCategory('carpentry')">
+              <i class="fas fa-hammer"></i> Carpentry
             </button>
-            <button class="category-btn" onclick="searchByCategory('services')">
-              <i class="fas fa-tools"></i> Services
+            <button class="category-btn" onclick="searchByCategory('hvac')">
+              <i class="fas fa-wind"></i> HVAC
             </button>
-            <button class="category-btn" onclick="searchByCategory('digital')">
-              <i class="fas fa-download"></i> Digital Items
+            <button class="category-btn" onclick="searchByCategory('landscaping')">
+              <i class="fas fa-leaf"></i> Landscaping
+            </button>
+            <button class="category-btn" onclick="searchByCategory('handyman')">
+              <i class="fas fa-tools"></i> Handyman
             </button>
           </div>
         </div>
@@ -180,20 +190,20 @@
       <section class="ai-negotiator-section" id="ai-negotiator">
         <h2><i class="fas fa-robot"></i> AI Trade Negotiator</h2>
         <p class="section-intro">
-          Automatically negotiate fair trade terms and generate a binding agreement draft.
+          Automatically negotiate fair trade terms and generate a draft Trade Record (not a legal contract).
         </p>
         <div class="ai-grid">
           <div class="ai-chat-card">
             <div id="aiChatLog" class="ai-chat-log">
               <div class="ai-message system">
-                Describe your item and what you want in return to start negotiating.
+                Tell me your trade and what you need in return. Example: "I'm a licensed plumber in Phoenix looking to trade work for drywall patching."
               </div>
             </div>
             <div class="ai-chat-input-row">
               <input
                 id="aiChatInput"
                 type="text"
-                placeholder="Example: I can trade my iPhone 12 for a MacBook Air..."
+                placeholder="Example: I can install water heaters in exchange for drywall work..."
                 aria-label="AI trade negotiator message"
               />
               <button id="aiSendBtn" class="search-btn">Send</button>

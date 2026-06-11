@@ -1,9 +1,11 @@
 import json
+import logging
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Header, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
+from . import billing
 from .ai_negotiator import generate_agreement, negotiate
 from .auth import get_current_user_id, reconcile_user_id
 from .config import settings
@@ -20,7 +22,16 @@ from .guardrails import (
     redact_pii,
 )
 from .marketplace_library import fetch_marketplace_preview_context
-from .schemas import AgreementRequest, AgreementResponse, NegotiateRequest, NegotiateResponse
+from .schemas import (
+    AgreementRequest,
+    AgreementResponse,
+    NegotiateRequest,
+    NegotiateResponse,
+    SubscribeResponse,
+    SubscriptionStatusResponse,
+)
+
+log = logging.getLogger("antbarter.main")
 
 app = FastAPI(title=settings.APP_NAME, version=settings.APP_VERSION)
 
@@ -78,6 +89,14 @@ def ai_negotiate(
     # Auth: never trust payload.user_id in isolation. Authenticated id wins;
     # the body field is only honored when AUTH_REQUIRED=false.
     user_id = reconcile_user_id(authenticated_user_id, payload.user_id)
+
+    # Layer 0: billing paywall. Off by default so tests/local dev keep
+    # working; flip BILLING_ENFORCED=true in prod once Stripe is configured.
+    if settings.BILLING_ENFORCED and not billing.is_subscribed(db, user_id):
+        raise HTTPException(
+            status_code=status.HTTP_402_PAYMENT_REQUIRED,
+            detail="subscription_required",
+        )
 
     if len(payload.latest_user_message) > settings.AI_MAX_INPUT_CHARS:
         raise HTTPException(status_code=413, detail="Message too long.")
@@ -301,3 +320,104 @@ def create_agreement(
     )
 
     return AgreementResponse(agreement_text=agreement_text, status="ok")
+
+
+# ---------------------------------------------------------------------------
+# Stripe subscription endpoints
+# ---------------------------------------------------------------------------
+
+
+def _resolve_redirect_urls(request: Request) -> tuple[str, str]:
+    """Pick safe success/cancel URLs.
+
+    Priority: explicit env config, then the Origin header. Anything else (a
+    client-supplied URL in the body) would let an attacker turn our Stripe
+    account into an open redirector, so we never accept that path.
+    """
+    origin = request.headers.get("origin") or ""
+    success = settings.STRIPE_SUCCESS_URL or (
+        f"{origin}/?subscribed=1" if origin else ""
+    )
+    cancel = settings.STRIPE_CANCEL_URL or (
+        f"{origin}/?subscribed=0" if origin else ""
+    )
+    if not success or not cancel:
+        raise HTTPException(
+            status_code=500,
+            detail="STRIPE_SUCCESS_URL/STRIPE_CANCEL_URL not configured.",
+        )
+    return success, cancel
+
+
+@app.post("/api/subscribe", response_model=SubscribeResponse)
+def subscribe(
+    request: Request,
+    db: Session = Depends(get_db),
+    authenticated_user_id: str | None = Depends(get_current_user_id),
+):
+    # Billing always requires an authenticated user. We don't accept a
+    # claimed user_id from the body — that would let anyone start a sub on
+    # behalf of someone else.
+    if not authenticated_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Sign in to subscribe.",
+        )
+    success, cancel = _resolve_redirect_urls(request)
+    try:
+        url = billing.create_checkout_session(
+            db=db,
+            user_id=authenticated_user_id,
+            success_url=success,
+            cancel_url=cancel,
+        )
+    except RuntimeError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        log.exception("stripe_checkout_failed user_id=%s", authenticated_user_id)
+        raise HTTPException(status_code=502, detail="Checkout temporarily unavailable.")
+    return SubscribeResponse(checkout_url=url)
+
+
+@app.get(
+    "/api/subscription-status",
+    response_model=SubscriptionStatusResponse,
+)
+def subscription_status(
+    db: Session = Depends(get_db),
+    authenticated_user_id: str | None = Depends(get_current_user_id),
+):
+    # Same rule: no body-provided user_id. If unauthenticated we report
+    # "not subscribed" rather than 401 so the frontend can show the
+    # sign-in/subscribe prompt without a noisy error.
+    if not authenticated_user_id:
+        return SubscriptionStatusResponse(subscribed=False, status="anonymous")
+    sub_row = billing.get_or_create_subscription_row(db, authenticated_user_id)
+    return SubscriptionStatusResponse(
+        subscribed=sub_row.status in ("active", "trialing"),
+        status=sub_row.status,
+    )
+
+
+@app.post("/api/stripe/webhook")
+async def stripe_webhook(
+    request: Request,
+    stripe_signature: str | None = Header(default=None, alias="Stripe-Signature"),
+    db: Session = Depends(get_db),
+):
+    """Stripe -> us. The signature header is mandatory and verified against
+    STRIPE_WEBHOOK_SECRET; the body is the raw bytes Stripe sent (NOT a
+    JSON re-encoding of it), otherwise signature verification fails."""
+    payload = await request.body()
+    try:
+        event = billing.verify_webhook(payload, stripe_signature)
+    except ValueError as e:
+        log.warning("stripe_webhook_rejected reason=%s", e)
+        raise HTTPException(status_code=400, detail="Invalid webhook.")
+    try:
+        billing.apply_webhook_event(db, event)
+    except Exception:
+        log.exception("stripe_webhook_processing_failed event_type=%s", event.get("type"))
+        # Return 500 so Stripe retries; do NOT 200 a swallowed error.
+        raise HTTPException(status_code=500, detail="Webhook processing failed.")
+    return {"received": True}

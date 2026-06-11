@@ -47,3 +47,12 @@ class AgreementResponse(BaseModel):
     refusal_reason: Optional[str] = None
     refusal_category: Optional[str] = None
     flagged_for_review: bool = False
+
+
+class SubscribeResponse(BaseModel):
+    checkout_url: str
+
+
+class SubscriptionStatusResponse(BaseModel):
+    subscribed: bool
+    status: str

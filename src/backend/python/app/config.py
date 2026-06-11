@@ -72,6 +72,26 @@ class Settings:
 
     DEFAULT_AGREEMENT_JURISDICTION = os.getenv("DEFAULT_AGREEMENT_JURISDICTION", "")
 
+    # --- Stripe subscription billing ---
+    # Secret key (sk_test_... in test mode, sk_live_... in live mode). Loaded
+    # from env only — never check this into source. The webhook secret is
+    # required to verify Stripe is the caller; without it we refuse webhooks.
+    STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
+    STRIPE_PRICE_ID = os.getenv("STRIPE_PRICE_ID", "")
+    STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+    # Public-facing URLs Stripe redirects to after checkout. Must match the
+    # production origin (https://yourdomain.com). Leave blank to fall back to
+    # the request's Origin header at call time.
+    STRIPE_SUCCESS_URL = os.getenv("STRIPE_SUCCESS_URL", "")
+    STRIPE_CANCEL_URL = os.getenv("STRIPE_CANCEL_URL", "")
+    # When true, subscription status gates the AI endpoints. Default false so
+    # the existing test suite and free-tier flows keep working until launch.
+    BILLING_ENFORCED = os.getenv("BILLING_ENFORCED", "false").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+
     def cors_origins_list(self) -> List[str]:
         raw = (self.CORS_ALLOW_ORIGINS or "").strip()
         if not raw:

@@ -7,3 +7,4 @@ pydantic
 gunicorn
 httpx
 python-dotenv
+stripe

@@ -1335,4 +1335,45 @@ footer {
     .posting-image {
         height: 120px;
     }
+
+    /* AI chat: stack Send under the input so the input gets full width
+       on iPhone SE (375px). Apple's HIG asks for 44px tap targets. */
+    .ai-chat-input-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .ai-chat-input-row input,
+    .ai-chat-input-row .search-btn {
+        width: 100%;
+        min-height: 44px;
+        font-size: 16px; /* prevents iOS zoom on focus */
+    }
+
+    /* Category buttons: 2-column grid so contractor-length labels
+       ("Landscaping", "Carpentry") don't overflow on a 375px viewport. */
+    .category-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .category-btn {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 8px;
+        font-size: 0.9em;
+        justify-content: center;
+    }
+
+    .cta-button {
+        width: 100%;
+        min-height: 44px;
+        justify-content: center;
+    }
+
+    /* Trade record draft button shouldn't shrink below tap-target size. */
+    .agreement-actions .category-btn {
+        min-height: 44px;
+    }
 }

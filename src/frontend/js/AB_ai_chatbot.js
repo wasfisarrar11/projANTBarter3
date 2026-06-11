@@ -58,14 +58,127 @@ function appendChatMessage(role, text) {
   chatLog.scrollTop = chatLog.scrollHeight;
 }
 
+function getAuthHeaders() {
+  // Reads the bearer token saved by the sign-in flow. Never reads it from a
+  // global / window object that a third-party script could overwrite.
+  try {
+    const tok = sessionStorage.getItem("antbarter_auth_token") || "";
+    return tok ? { Authorization: `Bearer ${tok}` } : {};
+  } catch (_) {
+    return {};
+  }
+}
+
+function friendlyErrorForStatus(s) {
+  if (s === 401) return "Please sign in to continue.";
+  if (s === 402) return "Subscribe to use the AI assistant.";
+  if (s === 413) return "That message is too long. Please shorten it.";
+  if (s === 429) return "You've hit today's free limit. Try again tomorrow.";
+  if (s >= 500) return "Something went wrong on our end. Try again in a minute.";
+  return "Couldn't send that. Check your connection and try again.";
+}
+
+async function fetchSubscriptionStatus() {
+  try {
+    const res = await fetch(apiUrl("/api/subscription-status"), {
+      method: "GET",
+      headers: { ...getAuthHeaders() },
+    });
+    if (!res.ok) return { subscribed: false, status: "unknown" };
+    return await res.json();
+  } catch (_) {
+    return { subscribed: false, status: "unknown" };
+  }
+}
+
+function ensurePaywallModal() {
+  let modal = document.getElementById("antbarterPaywallModal");
+  if (modal) return modal;
+  modal = document.createElement("div");
+  modal.id = "antbarterPaywallModal";
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-modal", "true");
+  modal.setAttribute("aria-labelledby", "antbarterPaywallTitle");
+  modal.style.cssText =
+    "position:fixed;inset:0;background:rgba(0,0,0,0.55);" +
+    "display:none;align-items:center;justify-content:center;z-index:9999;";
+  modal.innerHTML =
+    '<div style="background:#fff;max-width:420px;width:92%;padding:28px;' +
+    'border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,0.25);' +
+    'font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">' +
+    '<h2 id="antbarterPaywallTitle" style="margin:0 0 12px 0;font-size:1.3em;color:#222;">Subscribe to AntBarter AI</h2>' +
+    '<p style="margin:0 0 18px 0;color:#444;line-height:1.5;">' +
+    '$5/month for unlimited trade negotiation. Cancel anytime.</p>' +
+    '<button id="antbarterPaywallSubBtn" style="width:100%;padding:12px 16px;' +
+    'background:#e94e77;color:#fff;border:0;border-radius:8px;font-size:1em;' +
+    'font-weight:600;cursor:pointer;">Subscribe for $5/month</button>' +
+    '<button id="antbarterPaywallCancelBtn" style="width:100%;margin-top:10px;' +
+    'padding:10px 16px;background:transparent;color:#666;border:0;' +
+    'cursor:pointer;">Not now</button>' +
+    '<p id="antbarterPaywallError" style="color:#c0392b;margin:12px 0 0 0;' +
+    'min-height:1.2em;font-size:0.9em;"></p>' +
+    "</div>";
+  document.body.appendChild(modal);
+  modal.querySelector("#antbarterPaywallCancelBtn").addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+  modal.querySelector("#antbarterPaywallSubBtn").addEventListener("click", async () => {
+    const btn = modal.querySelector("#antbarterPaywallSubBtn");
+    const err = modal.querySelector("#antbarterPaywallError");
+    btn.disabled = true;
+    btn.textContent = "Redirecting...";
+    err.textContent = "";
+    try {
+      const res = await fetch(apiUrl("/api/subscribe"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+      });
+      if (res.status === 401) {
+        err.textContent = "Please sign in first, then try again.";
+        return;
+      }
+      if (!res.ok) {
+        err.textContent = friendlyErrorForStatus(res.status);
+        return;
+      }
+      const data = await res.json();
+      if (data && data.checkout_url) {
+        // Stripe Checkout is hosted by Stripe; full top-level navigation.
+        window.location.assign(data.checkout_url);
+      } else {
+        err.textContent = "Couldn't start checkout. Try again in a minute.";
+      }
+    } catch (_) {
+      err.textContent = "Network error. Check your connection and try again.";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Subscribe for $5/month";
+    }
+  });
+  return modal;
+}
+
+function showPaywall() {
+  ensurePaywallModal().style.display = "flex";
+}
+
 async function sendNegotiationMessage() {
   const input = document.getElementById("aiChatInput");
   if (!input) return;
 
   const message = input.value.trim();
   if (!message) return;
-  input.value = "";
 
+  // Paywall pre-check. We still gate server-side (402) — this is just to
+  // avoid bouncing the user through a refusal round-trip when we already
+  // know they're not subscribed.
+  const status = await fetchSubscriptionStatus();
+  if (!status.subscribed && status.status !== "unknown") {
+    showPaywall();
+    return;
+  }
+
+  input.value = "";
   appendChatMessage("user", message);
 
   const priorMessages = negotiationState.messages.filter((m) => m.role !== "system");
@@ -94,12 +207,18 @@ async function sendNegotiationMessage() {
   try {
     const res = await fetch(apiUrl("/api/ai/negotiate"), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(body),
     });
 
+    if (res.status === 402) {
+      showPaywall();
+      return;
+    }
+
     if (!res.ok) {
-      throw new Error(`Request failed: ${res.status}`);
+      appendChatMessage("system", friendlyErrorForStatus(res.status));
+      return;
     }
 
     const data = await res.json();
@@ -111,7 +230,7 @@ async function sendNegotiationMessage() {
     console.error(error);
     appendChatMessage(
       "system",
-      "The assistant is temporarily unavailable. Please try again later."
+      "Couldn't reach the assistant. Check your connection and try again."
     );
   }
 }
@@ -147,12 +266,18 @@ async function generateAgreement() {
   try {
     const res = await fetch(apiUrl("/api/agreements/generate"), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(body),
     });
 
+    if (res.status === 402) {
+      showPaywall();
+      return;
+    }
+
     if (!res.ok) {
-      throw new Error(`Request failed: ${res.status}`);
+      appendChatMessage("system", friendlyErrorForStatus(res.status));
+      return;
     }
 
     const data = await res.json();
@@ -161,7 +286,7 @@ async function generateAgreement() {
     console.error(error);
     appendChatMessage(
       "system",
-      "Agreement generation is temporarily unavailable. Please try again later."
+      "Couldn't generate the agreement. Try again in a minute."
     );
   }
 }
